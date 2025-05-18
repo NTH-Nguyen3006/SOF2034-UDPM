@@ -2,62 +2,77 @@ package poly.cafe.dao.impl;
 
 import poly.cafe.dao.impl.interfaces.BillDetailDAO;
 import poly.cafe.entity.BillDetails;
+import poly.cafe.util.XJdbc;
+import poly.cafe.util.XQuery;
 
 import java.util.List;
 
 public class BillDetailDAOImpl implements BillDetailDAO {
-    String createSql = "…";
-    String updateSql = "…";
-    String deleteSql = "…";
+    String createSql = """
+            INSERT INTO BillDetails (BillId, DrinkId, UnitPrice, Discount, Quantity)
+            VALUES (?,?,?,?,?)""";
+    String updateSql = """
+            UPDATE BillDetails SET 
+                BillId = ?, DrinkId = ?, UnitPrice = ?, Discount = ?, Quantity = ?
+            WHERE Id = ?""";
+    String deleteSql = "DELETE FROM BillDetails WHERE Id = ?";
 
     String findAllSql = """
-    SELECT bd.*, d.name AS drinkName
-    FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId""";
+        SELECT bd.*, d.name AS drinkName
+        FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId""";
 
     String findByIdSql = """
-    SELECT bd.*, d.name AS drinkName
-    FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId WHERE bd.Id=?""";
+        SELECT bd.*, d.name AS drinkName
+        FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId WHERE bd.Id=?""";
 
     String findByBillIdSql = """
-    SELECT bd.*, d.name AS drinkName
-    FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId WHERE bd.BillId=?""";
+        SELECT bd.*, d.name AS drinkName
+        FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId WHERE bd.BillId=?""";
 
     String findByDrinkIdSql = """
-    SELECT bd.*, d.name AS drinkName
-    FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId WHERE bd.DrinkId=?""";
+        SELECT bd.*, d.name AS drinkName
+        FROM BillDetails bd JOIN Drinks d ON d.Id=bd.DrinkId WHERE bd.DrinkId=?""";
 
     @Override
     public List<BillDetails> findByBillId(Long billId) {
-        return List.of();
+        return XQuery.getBeanList(BillDetails.class, findByBillIdSql, billId);
     }
 
     @Override
     public List<BillDetails> findByDrinkId(String drinkId) {
-        return List.of();
+        return XQuery.getBeanList(BillDetails.class, findByDrinkIdSql, drinkId);
     }
 
     @Override
     public BillDetails create(BillDetails entity) {
+        //BillId, DrinkId, UnitPrice, Discount, Quantity
+        int rowAffect = XJdbc.executeUpdate(createSql, entity.getBillId(),
+                entity.getDrinkName(), entity.getUnitPrice(), entity.getDiscount(),
+                entity.getQuantity());
+
+        if (rowAffect > 0) return XJdbc.getValue(findByBillIdSql, entity.getBillId());
         return null;
     }
 
     @Override
     public void update(BillDetails entity) {
-
+        int rowAffect = XJdbc.executeUpdate(updateSql, entity.getBillId(),
+                entity.getDrinkName(), entity.getUnitPrice(), entity.getDiscount(),
+                entity.getQuantity(), entity.getId());
     }
 
     @Override
     public void deleteById(Long aLong) {
-
+        int rowAffect = XJdbc.executeUpdate(deleteSql, aLong);
     }
 
     @Override
     public List<BillDetails> findAll() {
-        return List.of();
+        return XQuery.getBeanList(BillDetails.class, findAllSql);
     }
 
     @Override
     public BillDetails findById(Long aLong) {
-        return null;
+        return XQuery.getSingleBean(BillDetails.class, findByIdSql, aLong);
     }
 }

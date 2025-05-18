@@ -84,12 +84,8 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
             }
         });
 
-        txtEnd.setText("##/##/####");
-
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Đến ngày:");
-
-        txtBegin.setText("##/##/####");
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("Từ ngày:");
@@ -277,14 +273,14 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addComponent(tabs)
             .addGroup(layout.createSequentialGroup()
-                .addGap(72, 72, 72)
+                .addGap(60, 60, 60)
                 .addComponent(jLabel1)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtBegin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(25, 25, 25)
+                .addComponent(txtBegin, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtEnd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(txtEnd, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnFilter)
                 .addGap(18, 18, 18)
@@ -327,19 +323,19 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
     }//GEN-LAST:event_selectAllBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        
+        this.delete();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
-
+        this.update();
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
-
+        this.create();
     }//GEN-LAST:event_createBtnActionPerformed
 
     private void inputNewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNewBtnActionPerformed
-
+        this.clear();
     }//GEN-LAST:event_inputNewBtnActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -351,7 +347,7 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
     }//GEN-LAST:event_cboTimeRangesActionPerformed
 
     private void tabsStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabsStateChanged
-                this.fillRevenue();
+        this.fillRevenue();
     }//GEN-LAST:event_tabsStateChanged
 
     /**

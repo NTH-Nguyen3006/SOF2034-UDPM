@@ -14,7 +14,6 @@ import poly.cafe.ui.Controller.BillController;
 import poly.cafe.util.*;
 
 import javax.swing.table.DefaultTableModel;
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.IntStream;
 
@@ -42,7 +41,7 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     private void initComponents() {
 
         statusBtnGrp = new javax.swing.ButtonGroup();
-        formBills = new javax.swing.JTabbedPane();
+        tabsFormBills = new javax.swing.JTabbedPane();
         listBills = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtBegin = new javax.swing.JTextField();
@@ -111,10 +110,7 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
 
         tblBills.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null},
-                {null, null, null, null, null, null}
+
             },
             new String [] {
                 "Mã phiếu", "Thẻ số", "Thời điểm tạo", "Trạng thái", "Tên tài khoản", ""
@@ -123,9 +119,21 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblBills.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBillsMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblBills);
@@ -217,7 +225,7 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
                 .addGap(14, 14, 14))
         );
 
-        formBills.addTab("Danh Sách", listBills);
+        tabsFormBills.addTab("Danh Sách", listBills);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Mã phiếu");
@@ -398,18 +406,18 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
-        formBills.addTab("Biểu mẫu", jPanel1);
+        tabsFormBills.addTab("Biểu mẫu", jPanel1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(formBills)
+            .addComponent(tabsFormBills)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(formBills)
+                .addComponent(tabsFormBills)
                 .addGap(0, 0, 0))
         );
 
@@ -456,6 +464,12 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
         this.selectTimeRange();
         this.fillToTable();
     }//GEN-LAST:event_cboTimeRangesActionPerformed
+
+    private void tblBillsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillsMouseClicked
+        if (evt.getClickCount() == 2) {
+            this.edit();
+        }
+    }//GEN-LAST:event_tblBillsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -504,10 +518,9 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     List<Bills> items = List.of();
     BillDAO dao = new BillDAOImpl();
 
-
     @Override
     public void fillBillDetails() {
-        DefaultTableModel model = (DefaultTableModel) tblBills.getModel();
+        DefaultTableModel model = (DefaultTableModel) tblBillDetails.getModel();
         model.setRowCount(0);
         details = billDetailDao.findAll();
         if (!txtId.getText().isBlank()) {
@@ -553,12 +566,27 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
 
     @Override
     public void setForm(Bills bills) {
+        txtId.setText(bills.getId().toString());
+        txtCardId.setText(bills.getCardId().toString());
+        txtCardId.setText(bills.getCardId().toString());
+        txtCreator.setText(bills.getUsername());
+        txtCreateTime.setText(bills.getCheckin().toString());
+        if (bills.getCheckout() != null)
+            txtPayTime.setText(bills.getCheckout().toString());
+        if (bills.getStatus() == 0) rdoServicing.setSelected(true);
+        else rdoComplete.setSelected(true);
         this.fillBillDetails();
     }
 
     @Override
     public Bills getForm() {
-        return null;
+        return Bills.builder()
+            .username(txtCreator.getText())
+            .cardId(Integer.parseInt(txtCardId.getText()))
+            .status(rdoServicing.isSelected()? 0 : 1)
+            .checkin(XDate.parse(txtCreateTime.getText()))
+            .checkout(XDate.parse(txtPayTime.getText()))
+            .build();
     }
 
     @Override
@@ -580,42 +608,43 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
 
     @Override
     public void edit() {
-
+        this.setForm(items.get(tblBills.getSelectedRow()));
+        this.setEditable(true);
+        tabsFormBills.setSelectedIndex(1);
     }
 
     @Override
     public void create() {
-        if (!rdoCanceled.isSelected()){
-            var bill = Bills.builder()
-                    .username(txtCreator.getText())
-                    .cardId(Integer.parseInt(txtCardId.getText()))
-                    .status(rdoServicing.isSelected()? 0 : 1)
-                    .checkin(XDate.parse(txtCreateTime.getText()))
-                    .checkout(XDate.parse(txtPayTime.getText()))
-                    .build();
-            dao.create(bill);
+        boolean hasEmpty = XOther.hasTextFiled(txtCreator, txtCreateTime, txtCardId);
+        if (!rdoCanceled.isSelected() && !hasEmpty){
+            dao.create(this.getForm());
             fillToTable();
         }
     }
 
     @Override
     public void update() {
-
+        dao.update(this.getForm());
     }
 
     @Override
     public void delete() {
+        dao.deleteById(Long.parseLong(txtId.getText()));
 
     }
 
     @Override
     public void clear() {
-
+        XOther.setEmptyField(txtCreateTime, txtCreator, txtCardId, txtId, txtPayTime);
+        rdoServicing.setSelected(true);
     }
 
     @Override
     public void setEditable(boolean editable) {
-
+        txtId.setEnabled(!editable);
+        createBtn.setEnabled(!editable);
+        updateBtn.setEnabled(editable);
+        deleteBtn.setEnabled(editable);
     }
 
     @Override
@@ -637,14 +666,7 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     @Override
     public void deleteCheckedItems() {
         var table = (DefaultTableModel) tblBills.getModel();
-//        ArrayList<Bills> itemsToDel = new ArrayList();
-//        for (int i = 0; i < items.size(); i++) {
-//            boolean Checked = (boolean) table.getValueAt(i, table.getColumnCount()-1);
-//            if (Checked) itemsToDel.add(items.get(i));
-//        }
-
         if (XDialog.confirm("Bạn chắc đã xóa những dữ liệu đã chọn không ?")) {
-//            items.removeAll(itemsToDel);
             table.getDataVector().stream().filter(itemVec -> (boolean) itemVec.getLast())
                     .forEach(itemVec -> dao.deleteById((long) itemVec.getFirst()));
             this.fillToTable();
@@ -657,7 +679,6 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     private javax.swing.JButton createBtn;
     private javax.swing.JButton delSelectedBtn;
     private javax.swing.JButton deleteBtn;
-    private javax.swing.JTabbedPane formBills;
     private javax.swing.JButton inputNewBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
@@ -681,6 +702,7 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     private javax.swing.JButton rmSelectionBtn;
     private javax.swing.JButton selectAllBtn;
     private javax.swing.ButtonGroup statusBtnGrp;
+    private javax.swing.JTabbedPane tabsFormBills;
     private javax.swing.JTable tblBillDetails;
     private javax.swing.JTable tblBills;
     private javax.swing.JTextField txtBegin;
