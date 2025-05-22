@@ -375,6 +375,7 @@ public class CategoryManagerJDialog extends javax.swing.JDialog implements Categ
     public void uncheckAll() {
         this.setCheckedAll(false);
     }
+
     private void setCheckedAll(boolean checked) {
         for (int i = 0; i < tblCategories.getRowCount(); i++) {
             tblCategories.setValueAt(checked, i, 2);

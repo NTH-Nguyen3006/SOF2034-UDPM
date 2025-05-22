@@ -21,8 +21,6 @@ public class WelcomeJDialog extends javax.swing.JDialog implements WelcomeContro
     public WelcomeJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        imageLabel.setIcon(XIcon.getIcon(
-                "trump-small.png", imageLabel.getWidth(), imageLabel.getHeight()));
     }
     
     /**
@@ -86,7 +84,6 @@ public class WelcomeJDialog extends javax.swing.JDialog implements WelcomeContro
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        // TODO add your handling code here:
         this.watting();
     }//GEN-LAST:event_formWindowOpened
 
@@ -134,6 +131,8 @@ public class WelcomeJDialog extends javax.swing.JDialog implements WelcomeContro
 
     @Override
     public void watting() {
+        imageLabel.setIcon(XIcon.getIcon(
+                "trump-small.png", imageLabel.getWidth(), imageLabel.getHeight()));
         this.setLocationRelativeTo(null);
 
         new Thread(() -> {

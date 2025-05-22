@@ -44,6 +44,7 @@ public class LoginJDialog extends javax.swing.JDialog implements LoginController
         jLabel4 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setTitle("Đăng nhập");
         setBackground(new java.awt.Color(255, 255, 255));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
@@ -128,7 +129,7 @@ public class LoginJDialog extends javax.swing.JDialog implements LoginController
     }// </editor-fold>//GEN-END:initComponents
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
-        login();
+        this.login();
     }//GEN-LAST:event_loginBtnActionPerformed
 
     private void exitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exitBtnActionPerformed
@@ -214,5 +215,4 @@ public class LoginJDialog extends javax.swing.JDialog implements LoginController
             this.dispose();
         }
     }
-
 }

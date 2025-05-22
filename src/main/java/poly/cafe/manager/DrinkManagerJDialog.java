@@ -14,6 +14,7 @@ import poly.cafe.ui.Controller.DrinkController;
 import poly.cafe.util.XIcon;
 
 import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.util.List;
@@ -42,6 +43,7 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     private void initComponents() {
 
         fileChooser = new javax.swing.JFileChooser();
+        bGrStatus = new javax.swing.ButtonGroup();
         tabs = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
@@ -62,12 +64,12 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
         updateBtn = new javax.swing.JButton();
         createBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        txtId1 = new javax.swing.JTextField();
-        txtName1 = new javax.swing.JTextField();
+        txtTypeId = new javax.swing.JTextField();
+        txtTypeName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cboCategories = new javax.swing.JComboBox<>();
-        jRadioButton1 = new javax.swing.JRadioButton();
+        rdoAvailable = new javax.swing.JRadioButton();
         jRadioButton2 = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         lblImage = new javax.swing.JLabel();
@@ -219,14 +221,21 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
 
         cboCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
-        jRadioButton1.setText("Sẵn có");
+        bGrStatus.add(rdoAvailable);
+        rdoAvailable.setText("Sẵn có");
 
+        bGrStatus.add(jRadioButton2);
         jRadioButton2.setText("Hết hàng");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Trạng thái");
 
         lblImage.setBackground(new java.awt.Color(255, 255, 255));
+        lblImage.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                lblImageMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -249,12 +258,12 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtId1)
-                                .addComponent(txtName1, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
+                                .addComponent(txtTypeId)
+                                .addComponent(txtTypeName, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addComponent(jRadioButton1)
+                                .addComponent(rdoAvailable)
                                 .addGap(18, 18, 18)
                                 .addComponent(jRadioButton2))
                             .addComponent(jLabel6))
@@ -289,11 +298,11 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(0, 0, 0)
-                                .addComponent(txtId1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtTypeId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel4)
                                 .addGap(0, 0, 0)
-                                .addComponent(txtName1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(txtTypeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
@@ -301,7 +310,7 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                         .addGap(0, 0, 0)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cboCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jRadioButton1)
+                            .addComponent(rdoAvailable)
                             .addComponent(jRadioButton2))
                         .addGap(18, 18, 18))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
@@ -365,6 +374,10 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
         this.open();
     }//GEN-LAST:event_formWindowOpened
 
+    private void lblImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblImageMouseClicked
+        this.chooseFile();
+    }//GEN-LAST:event_lblImageMouseClicked
+
     /**
      * @param args the command line arguments
      */
@@ -408,6 +421,7 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.ButtonGroup bGrStatus;
     private javax.swing.JComboBox<String> cboCategories;
     private javax.swing.JButton createBtn;
     private javax.swing.JButton delSelectedBtn;
@@ -423,20 +437,20 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
     private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblImage;
+    private javax.swing.JRadioButton rdoAvailable;
     private javax.swing.JButton rmSelectionBtn;
     private javax.swing.JButton selectAllBtn;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JTable tblDrinks;
     private javax.swing.JTextField txtId;
-    private javax.swing.JTextField txtId1;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtName1;
+    private javax.swing.JTextField txtTypeId;
+    private javax.swing.JTextField txtTypeName;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 
@@ -462,6 +476,8 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
 
     @Override
     public void chooseFile() {
+        String[] fileTypeAllow = {"png", "jpg", "jpeg"};
+        fileChooser.setFileFilter(new FileNameExtensionFilter("Chọn ảnh image/*", fileTypeAllow));
         if(fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION){
             File selectedFile = fileChooser.getSelectedFile();
             File file = XIcon.copyTo(selectedFile, "images");
@@ -534,7 +550,10 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
 
     @Override
     public void setEditable(boolean editable) {
-
+        txtId.setEnabled(!editable);
+        createBtn.setEnabled(!editable);
+        updateBtn.setEnabled(editable);
+        deleteBtn.setEnabled(editable);
     }
 
     @Override

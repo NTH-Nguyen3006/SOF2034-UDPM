@@ -4,11 +4,22 @@
  */
 package poly.cafe.manager;
 
+import poly.cafe.dao.impl.UserDAOImpl;
+import poly.cafe.dao.impl.interfaces.UserDAO;
+import poly.cafe.entity.Categories;
+import poly.cafe.entity.Users;
+import poly.cafe.ui.Controller.UserController;
+import poly.cafe.util.XDialog;
+
+import javax.swing.table.DefaultTableModel;
+import java.io.File;
+import java.util.List;
+
 /**
  *
  * @author Admin
  */
-public class UserManagerJDialog extends javax.swing.JDialog {
+public class UserManagerJDialog extends javax.swing.JDialog implements UserController {
 
     /**
      * Creates new form UserManagerJDialog
@@ -27,19 +38,22 @@ public class UserManagerJDialog extends javax.swing.JDialog {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        buttonGroup1 = new javax.swing.ButtonGroup();
-        jTabbedPane2 = new javax.swing.JTabbedPane();
+        roleGroup = new javax.swing.ButtonGroup();
+        fileChooser = new javax.swing.JFileChooser();
+        statusGrp = new javax.swing.ButtonGroup();
+        tabs = new javax.swing.JTabbedPane();
         listTab = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tableShow = new javax.swing.JTable();
+        tableUsers = new javax.swing.JTable();
         delSelectedBtn = new javax.swing.JButton();
         selectAllBtn = new javax.swing.JButton();
         rmSelectionBtn = new javax.swing.JButton();
         formTab = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
+        lblImage = new javax.swing.JLabel();
         createBtn = new javax.swing.JButton();
         updateBtn = new javax.swing.JButton();
-        deleteBrn = new javax.swing.JButton();
+        deleteBtn = new javax.swing.JButton();
         inputNewBtn = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         usernameField = new javax.swing.JTextField();
@@ -50,11 +64,11 @@ public class UserManagerJDialog extends javax.swing.JDialog {
         comfirmPasswordField = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jRadioButton1 = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
-        jRadioButton3 = new javax.swing.JRadioButton();
+        rdoManager = new javax.swing.JRadioButton();
+        rdoEmloyee = new javax.swing.JRadioButton();
+        rdoShutDown = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
-        jRadioButton4 = new javax.swing.JRadioButton();
+        rdoActive = new javax.swing.JRadioButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quản lý tài khoản");
@@ -64,7 +78,7 @@ public class UserManagerJDialog extends javax.swing.JDialog {
             }
         });
 
-        tableShow.setModel(new javax.swing.table.DefaultTableModel(
+        tableUsers.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -75,18 +89,45 @@ public class UserManagerJDialog extends javax.swing.JDialog {
             Class[] types = new Class [] {
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
+            };
 
             public Class getColumnClass(int columnIndex) {
                 return types [columnIndex];
             }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
         });
-        jScrollPane1.setViewportView(tableShow);
+        tableUsers.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableUsersMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableUsers);
 
         delSelectedBtn.setText("xóa mục đã chọn");
+        delSelectedBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                delSelectedBtnActionPerformed(evt);
+            }
+        });
 
         selectAllBtn.setText("Chọn tất cả");
+        selectAllBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                selectAllBtnActionPerformed(evt);
+            }
+        });
 
         rmSelectionBtn.setText("Bỏ chọn tất cả");
+        rmSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rmSelectionBtnActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout listTabLayout = new javax.swing.GroupLayout(listTab);
         listTab.setLayout(listTabLayout);
@@ -115,7 +156,7 @@ public class UserManagerJDialog extends javax.swing.JDialog {
                 .addGap(45, 45, 45))
         );
 
-        jTabbedPane2.addTab("Danh Sách", listTab);
+        tabs.addTab("Danh Sách", listTab);
 
         jPanel2.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
 
@@ -123,22 +164,42 @@ public class UserManagerJDialog extends javax.swing.JDialog {
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 170, Short.MAX_VALUE)
+            .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, 170, Short.MAX_VALUE)
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 220, Short.MAX_VALUE)
+            .addComponent(lblImage, javax.swing.GroupLayout.DEFAULT_SIZE, 220, Short.MAX_VALUE)
         );
 
         createBtn.setText("Tạo mới");
+        createBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                createBtnActionPerformed(evt);
+            }
+        });
 
         updateBtn.setText("Cập nhật");
         updateBtn.setEnabled(false);
+        updateBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                updateBtnActionPerformed(evt);
+            }
+        });
 
-        deleteBrn.setText("Xóa");
-        deleteBrn.setEnabled(false);
+        deleteBtn.setText("Xóa");
+        deleteBtn.setEnabled(false);
+        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                deleteBtnActionPerformed(evt);
+            }
+        });
 
         inputNewBtn.setText("Nhập mới");
+        inputNewBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputNewBtnActionPerformed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setLabelFor(usernameField);
@@ -159,16 +220,22 @@ public class UserManagerJDialog extends javax.swing.JDialog {
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel5.setText("Vai trò");
 
-        jRadioButton1.setText("Quản lý");
+        roleGroup.add(rdoManager);
+        rdoManager.setSelected(true);
+        rdoManager.setText("Quản lý");
 
-        jRadioButton2.setText("Nhân viên");
+        roleGroup.add(rdoEmloyee);
+        rdoEmloyee.setText("Nhân viên");
 
-        jRadioButton3.setText("Nhân viên");
+        statusGrp.add(rdoShutDown);
+        rdoShutDown.setText("Ngưng hoạt động");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel6.setText("Trạng Thái");
 
-        jRadioButton4.setText("Hoạt động");
+        statusGrp.add(rdoActive);
+        rdoActive.setSelected(true);
+        rdoActive.setText("Hoạt động");
 
         javax.swing.GroupLayout formTabLayout = new javax.swing.GroupLayout(formTab);
         formTab.setLayout(formTabLayout);
@@ -178,7 +245,7 @@ public class UserManagerJDialog extends javax.swing.JDialog {
                 .addGap(42, 42, 42)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(57, 57, 57)
-                .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(formTabLayout.createSequentialGroup()
                         .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
@@ -190,26 +257,21 @@ public class UserManagerJDialog extends javax.swing.JDialog {
                     .addGroup(formTabLayout.createSequentialGroup()
                         .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(passwordField, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2))
-                        .addGap(18, 18, 18)
-                        .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(comfirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)))
-                    .addGroup(formTabLayout.createSequentialGroup()
-                        .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel2)
                             .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(formTabLayout.createSequentialGroup()
-                                .addComponent(jRadioButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rdoManager, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jRadioButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(rdoEmloyee, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
                         .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(formTabLayout.createSequentialGroup()
-                                .addComponent(jRadioButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(rdoActive, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jRadioButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(64, 64, 64)))
+                                .addComponent(rdoShutDown))
+                            .addComponent(comfirmPasswordField, javax.swing.GroupLayout.PREFERRED_SIZE, 255, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4))))
                 .addGap(0, 17, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, formTabLayout.createSequentialGroup()
                 .addGap(0, 0, Short.MAX_VALUE)
@@ -217,7 +279,7 @@ public class UserManagerJDialog extends javax.swing.JDialog {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(updateBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(deleteBrn)
+                .addComponent(deleteBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(inputNewBtn)
                 .addGap(63, 63, 63))
@@ -253,36 +315,36 @@ public class UserManagerJDialog extends javax.swing.JDialog {
                                 .addComponent(jLabel5)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jRadioButton1)
-                                    .addComponent(jRadioButton2)))
+                                    .addComponent(rdoManager)
+                                    .addComponent(rdoEmloyee)))
                             .addGroup(formTabLayout.createSequentialGroup()
                                 .addComponent(jLabel6)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jRadioButton4)
-                                    .addComponent(jRadioButton3)))))
+                                    .addComponent(rdoActive)
+                                    .addComponent(rdoShutDown)))))
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(formTabLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createBtn)
                     .addComponent(updateBtn)
-                    .addComponent(deleteBrn)
+                    .addComponent(deleteBtn)
                     .addComponent(inputNewBtn))
                 .addGap(46, 46, 46))
         );
 
-        jTabbedPane2.addTab("Biểu mẫu", formTab);
+        tabs.addTab("Biểu mẫu", formTab);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jTabbedPane2)
+            .addComponent(tabs)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(jTabbedPane2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(tabs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
 
@@ -291,7 +353,42 @@ public class UserManagerJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.open();
     }//GEN-LAST:event_formWindowOpened
+
+    private void selectAllBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllBtnActionPerformed
+        this.checkAll();
+    }//GEN-LAST:event_selectAllBtnActionPerformed
+
+    private void rmSelectionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmSelectionBtnActionPerformed
+        this.uncheckAll();
+    }//GEN-LAST:event_rmSelectionBtnActionPerformed
+
+    private void delSelectedBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delSelectedBtnActionPerformed
+        this.deleteCheckedItems();
+    }//GEN-LAST:event_delSelectedBtnActionPerformed
+
+    private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_createBtnActionPerformed
+
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_updateBtnActionPerformed
+
+    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_deleteBtnActionPerformed
+
+    private void inputNewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNewBtnActionPerformed
+        this.clear();
+    }//GEN-LAST:event_inputNewBtnActionPerformed
+
+    private void tableUsersMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableUsersMouseClicked
+        if ( evt.getClickCount() == 2) {
+            this.edit();
+        }
+    }//GEN-LAST:event_tableUsersMouseClicked
 
     /**
      * @param args the command line arguments
@@ -336,11 +433,11 @@ public class UserManagerJDialog extends javax.swing.JDialog {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JTextField comfirmPasswordField;
     private javax.swing.JButton createBtn;
     private javax.swing.JButton delSelectedBtn;
-    private javax.swing.JButton deleteBrn;
+    private javax.swing.JButton deleteBtn;
+    private javax.swing.JFileChooser fileChooser;
     private javax.swing.JPanel formTab;
     private javax.swing.JTextField fullnameField;
     private javax.swing.JButton inputNewBtn;
@@ -351,18 +448,134 @@ public class UserManagerJDialog extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton1;
-    private javax.swing.JRadioButton jRadioButton2;
-    private javax.swing.JRadioButton jRadioButton3;
-    private javax.swing.JRadioButton jRadioButton4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTabbedPane jTabbedPane2;
+    private javax.swing.JLabel lblImage;
     private javax.swing.JPanel listTab;
     private javax.swing.JTextField passwordField;
+    private javax.swing.JRadioButton rdoActive;
+    private javax.swing.JRadioButton rdoEmloyee;
+    private javax.swing.JRadioButton rdoManager;
+    private javax.swing.JRadioButton rdoShutDown;
     private javax.swing.JButton rmSelectionBtn;
+    private javax.swing.ButtonGroup roleGroup;
     private javax.swing.JButton selectAllBtn;
-    private javax.swing.JTable tableShow;
+    private javax.swing.ButtonGroup statusGrp;
+    private javax.swing.JTable tableUsers;
+    private javax.swing.JTabbedPane tabs;
     private javax.swing.JButton updateBtn;
     private javax.swing.JTextField usernameField;
     // End of variables declaration//GEN-END:variables
+
+
+    UserDAO dao = new UserDAOImpl();
+    List<Users> items = List.of();
+
+    @Override
+    public void open() {
+        this.setLocationRelativeTo(null);
+        fillToTable();
+    }
+
+    @Override
+    public void setForm(Users users) {
+        usernameField.setText(users.getUsername());
+        fullnameField.setText(users.getFullname());
+        passwordField.setText(users.getPassword());
+        comfirmPasswordField.setText(users.getPassword());
+        rdoManager.setSelected(users.isManager());
+        rdoActive.setSelected(users.isEnabled());
+    }
+
+    @Override
+    public Users getForm() {
+        String filename = lblImage.getToolTipText();
+        return new Users(
+                usernameField.getText(), passwordField.getText(),
+                rdoActive.isSelected(), fullnameField.getText(),
+                filename, rdoManager.isSelected());
+    }
+
+    @Override
+    public void fillToTable() {
+        DefaultTableModel model = (DefaultTableModel) tableUsers.getModel();
+        model.setRowCount(0);
+        items = dao.findAll();
+        items.forEach(item -> {
+            Object[] rowData = {
+                    item.getUsername(),
+                    item.getPassword(),
+                    item.getPhoto(),
+                    item.isManager() ? "Quản lý" : "Nhân viên",
+                    item.isEnabled() ? "Hoạt động" : "Ngưng",
+                    false
+            };
+            model.addRow(rowData);
+        });
+    }
+
+    @Override
+    public void edit() {
+        Users entity = items.get(tableUsers.getSelectedRow());
+        this.setForm(entity);
+        this.setEditable(true);
+        tabs.setSelectedIndex(1);
+        System.out.println(tabs.getSelectedIndex());
+    }
+
+    @Override
+    public void create() {
+        dao.create(this.getForm());
+    }
+
+    @Override
+    public void update() {
+        dao.update(this.getForm());
+    }
+
+    @Override
+    public void delete() {
+        dao.deleteById(usernameField.getText());
+    }
+
+    @Override
+    public void clear() {
+        this.setForm(new Users());
+        this.setEditable(false);
+    }
+
+    @Override
+    public void setEditable(boolean editable) {
+        usernameField.setEnabled(!editable);
+        createBtn.setEnabled(!editable);
+        updateBtn.setEnabled(editable);
+        deleteBtn.setEnabled(editable);
+    }
+
+    @Override
+    public void checkAll() {
+        this.setCheckedAll(true);
+    }
+
+    private void setCheckedAll(boolean checked) {
+        for (int i = 0; i < tableUsers.getRowCount(); i++) {
+            tableUsers.setValueAt(checked, i, tableUsers.getColumnCount()-1);
+        }
+    }
+
+    @Override
+    public void uncheckAll() {
+        this.setCheckedAll(false);
+    }
+
+    @Override
+    public void deleteCheckedItems() {
+        if (XDialog.confirm("Bạn thực sự muốn xóa các mục chọn?")) {
+            for (int i = 0; i < tableUsers.getRowCount(); i++) {
+                if ((Boolean) tableUsers.getValueAt(i, 2)) {
+                    dao.deleteById(items.get(i).getUsername());
+                }
+            }
+            this.fillToTable();
+        }
+    }
 }

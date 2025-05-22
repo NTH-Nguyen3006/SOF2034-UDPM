@@ -50,7 +50,7 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
         btnExit = new javax.swing.JButton();
         btnChangePassword = new javax.swing.JButton();
         pnlManager = new javax.swing.JPanel();
-        jPanel1 = new javax.swing.JPanel();
+        btnForManager = new javax.swing.JPanel();
         btnBillManager = new javax.swing.JButton();
         btnUserManager = new javax.swing.JButton();
         btnDrinkManager = new javax.swing.JButton();
@@ -74,17 +74,37 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
         lblPhoto.setOpaque(true);
 
         btnHistory.setText("Lịch Sử");
+        btnHistory.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnHistoryActionPerformed(evt);
+            }
+        });
 
-        lblFullname.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        lblFullname.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         lblFullname.setForeground(new java.awt.Color(204, 51, 0));
         lblFullname.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblFullname.setText("None");
 
         btnSales.setText("Bán Hàng");
+        btnSales.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSalesActionPerformed(evt);
+            }
+        });
 
         btnExit.setText("Kết thúc");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
+            }
+        });
 
         btnChangePassword.setText("Đổi mật khẩu");
+        btnChangePassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnChangePasswordActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout pnlCenterLayout = new javax.swing.GroupLayout(pnlCenter);
         pnlCenter.setLayout(pnlCenterLayout);
@@ -135,14 +155,24 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
         pnlManager.setInheritsPopupMenu(true);
         pnlManager.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel1.setOpaque(false);
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        btnForManager.setOpaque(false);
+        btnForManager.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         btnBillManager.setText("Phiếu bán hàng");
-        jPanel1.add(btnBillManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, -1, 41));
+        btnBillManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBillManagerActionPerformed(evt);
+            }
+        });
+        btnForManager.add(btnBillManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 50, -1, 41));
 
         btnUserManager.setText("Người SD");
-        jPanel1.add(btnUserManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 102, 41));
+        btnUserManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserManagerActionPerformed(evt);
+            }
+        });
+        btnForManager.add(btnUserManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 50, 102, 41));
 
         btnDrinkManager.setText("Đồ uống");
         btnDrinkManager.addActionListener(new java.awt.event.ActionListener() {
@@ -150,18 +180,33 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
                 btnDrinkManagerActionPerformed(evt);
             }
         });
-        jPanel1.add(btnDrinkManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 112, 41));
+        btnForManager.add(btnDrinkManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 112, 41));
 
         btnCardManager.setText("Thẻ định danh");
-        jPanel1.add(btnCardManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 0, -1, 41));
+        btnCardManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCardManagerActionPerformed(evt);
+            }
+        });
+        btnForManager.add(btnCardManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 0, -1, 41));
 
         btnRevenueManager.setText("Doanh thu");
-        jPanel1.add(btnRevenueManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 105, 41));
+        btnRevenueManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRevenueManagerActionPerformed(evt);
+            }
+        });
+        btnForManager.add(btnRevenueManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 105, 41));
 
         btnCategoryManager.setText("Loại đồ uống");
-        jPanel1.add(btnCategoryManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 0, 102, 41));
+        btnCategoryManager.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCategoryManagerActionPerformed(evt);
+            }
+        });
+        btnForManager.add(btnCategoryManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 0, 102, 41));
 
-        pnlManager.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 520, 90));
+        pnlManager.add(btnForManager, new org.netbeans.lib.awtextra.AbsoluteConstraints(50, 320, 520, 90));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/poly/cafe/icons/coffee-shop.jpg"))); // NOI18N
         pnlManager.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(-10, 0, 610, 470));
@@ -189,12 +234,48 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnDrinkManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDrinkManagerActionPerformed
-        
+        this.showDrinkManagerJDialog(this);
     }//GEN-LAST:event_btnDrinkManagerActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        this.showWelcomeJDialog(this);
+            
     }//GEN-LAST:event_formWindowOpened
+
+    private void btnSalesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalesActionPerformed
+        this.showSalesJDialog(this);
+    }//GEN-LAST:event_btnSalesActionPerformed
+
+    private void btnExitActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExitActionPerformed
+        this.exit();
+    }//GEN-LAST:event_btnExitActionPerformed
+
+    private void btnHistoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnHistoryActionPerformed
+        this.showHistoryJDialog(this);
+    }//GEN-LAST:event_btnHistoryActionPerformed
+
+    private void btnChangePasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePasswordActionPerformed
+        this.showChangePasswordJDialog(this);
+    }//GEN-LAST:event_btnChangePasswordActionPerformed
+
+    private void btnCategoryManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCategoryManagerActionPerformed
+        this.showCategoryManagerJDialog(this);
+    }//GEN-LAST:event_btnCategoryManagerActionPerformed
+
+    private void btnCardManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCardManagerActionPerformed
+        this.showCardManagerJDialog(this);
+    }//GEN-LAST:event_btnCardManagerActionPerformed
+
+    private void btnBillManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBillManagerActionPerformed
+        this.showBillManagerJDialog(this);
+    }//GEN-LAST:event_btnBillManagerActionPerformed
+
+    private void btnUserManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserManagerActionPerformed
+        this.showUserManagerJDialog(this);
+    }//GEN-LAST:event_btnUserManagerActionPerformed
+
+    private void btnRevenueManagerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevenueManagerActionPerformed
+        this.showRevenueManagerJDialog(this);
+    }//GEN-LAST:event_btnRevenueManagerActionPerformed
 
     /**
      * @param args the command line arguments
@@ -238,12 +319,12 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
     private javax.swing.JButton btnChangePassword;
     private javax.swing.JButton btnDrinkManager;
     private javax.swing.JButton btnExit;
+    private javax.swing.JPanel btnForManager;
     private javax.swing.JButton btnHistory;
     private javax.swing.JButton btnRevenueManager;
     private javax.swing.JButton btnSales;
     private javax.swing.JButton btnUserManager;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblFullname;
     private javax.swing.JLabel lblPhoto;
     private javax.swing.JPanel pnlCenter;
@@ -254,16 +335,13 @@ public class PolyCafeJFrame extends javax.swing.JFrame implements PolyCafeContro
     public void init() {
         this.setIconImage(XIcon.getIcon("trump-small.png").getImage());
         this.setLocationRelativeTo(null);
-
         this.showWelcomeJDialog(this);
         this.showLoginJDialog(this);
 
-//        XIcon.setIcon(lblPhoto, "photos/" + XAuth.user.getPhoto());
         XIcon.setIcon(lblPhoto, "trump-small.png");
         lblFullname.setText(XAuth.user.getFullname());
-
         if(!XAuth.user.isManager()){
-            pnlCenter.remove(pnlManager);
+            pnlManager.remove(btnForManager);
         }
     }
 
