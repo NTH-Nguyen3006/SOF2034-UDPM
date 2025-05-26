@@ -90,7 +90,7 @@ public class UserManagerJDialog extends javax.swing.JDialog implements UserContr
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -369,15 +369,15 @@ public class UserManagerJDialog extends javax.swing.JDialog implements UserContr
     }//GEN-LAST:event_delSelectedBtnActionPerformed
 
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
-        // TODO add your handling code here:
+        this.create();
     }//GEN-LAST:event_createBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
-        // TODO add your handling code here:
+        this.update();
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        // TODO add your handling code here:
+        this.delete();
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void inputNewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNewBtnActionPerformed
@@ -488,7 +488,9 @@ public class UserManagerJDialog extends javax.swing.JDialog implements UserContr
 
     @Override
     public Users getForm() {
+        System.out.println(lblImage.getToolTipText());
         String filename = lblImage.getToolTipText();
+        if (filename == null) filename = "";
         return new Users(
                 usernameField.getText(), passwordField.getText(),
                 rdoActive.isSelected(), fullnameField.getText(),
@@ -511,6 +513,8 @@ public class UserManagerJDialog extends javax.swing.JDialog implements UserContr
             };
             model.addRow(rowData);
         });
+        this.clear();
+        tabs.setSelectedIndex(0);
     }
 
     @Override
@@ -525,16 +529,19 @@ public class UserManagerJDialog extends javax.swing.JDialog implements UserContr
     @Override
     public void create() {
         dao.create(this.getForm());
+        this.fillToTable();
     }
 
     @Override
     public void update() {
         dao.update(this.getForm());
+        this.fillToTable();
     }
 
     @Override
     public void delete() {
         dao.deleteById(usernameField.getText());
+        this.fillToTable();
     }
 
     @Override

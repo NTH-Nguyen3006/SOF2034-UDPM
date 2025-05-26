@@ -10,11 +10,12 @@ import java.util.List;
 public class UserDAOImpl implements UserDAO {
     String createSql = """
             INSERT INTO Users (Username, [Password], [Enabled], Fullname, Photo, Manager)
-            VALUES (?, ?, ?, ?, ?, ?),""";
+            VALUES (?, ?, ?, ?, ?, ?)""";
 
     String updateSql = """
             UPDATE Users SET [Password] = ?, [Enabled] = ?,
-            Fullname = ?, Photo = ?, Manager = ? WHERE Username = ?
+            Fullname = ?, Photo = ?, Manager = ? 
+            WHERE Username = ?
             """;
     String deleteSql = """
             DELETE FROM Users WHERE Username = ?

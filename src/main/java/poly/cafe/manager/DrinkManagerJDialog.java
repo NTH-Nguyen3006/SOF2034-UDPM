@@ -11,6 +11,7 @@ import poly.cafe.dao.impl.interfaces.DrinkDAO;
 import poly.cafe.entity.Categories;
 import poly.cafe.entity.Drinks;
 import poly.cafe.ui.Controller.DrinkController;
+import poly.cafe.util.XDialog;
 import poly.cafe.util.XIcon;
 
 import javax.swing.*;
@@ -18,6 +19,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  *
@@ -51,12 +53,12 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
         delSelectedBtn = new javax.swing.JButton();
         rmSelectionBtn = new javax.swing.JButton();
         selectAllBtn = new javax.swing.JButton();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        tblCategories = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         txtId = new javax.swing.JTextField();
-        txtName = new javax.swing.JTextField();
+        txtPrice = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
         jSeparator1 = new javax.swing.JSeparator();
         inputNewBtn = new javax.swing.JButton();
@@ -64,15 +66,16 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
         updateBtn = new javax.swing.JButton();
         createBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        txtTypeId = new javax.swing.JTextField();
-        txtTypeName = new javax.swing.JTextField();
+        txtName = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         cboCategories = new javax.swing.JComboBox<>();
         rdoAvailable = new javax.swing.JRadioButton();
-        jRadioButton2 = new javax.swing.JRadioButton();
+        rdoSailOut = new javax.swing.JRadioButton();
         jLabel6 = new javax.swing.JLabel();
         lblImage = new javax.swing.JLabel();
+        sldDiscount = new javax.swing.JSlider();
+        lblSliderValue = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Quản lý đồ uống");
@@ -94,7 +97,7 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                 java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
             };
             boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false
+                false, false, false, false, false, true
             };
 
             public Class getColumnClass(int columnIndex) {
@@ -138,14 +141,35 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
             }
         });
 
-        jScrollPane2.setViewportView(jList1);
+        tblCategories.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Loại đồ uống"
+            }
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblCategories.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblCategoriesMouseClicked(evt);
+            }
+        });
+        jScrollPane3.setViewportView(tblCategories);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap(317, Short.MAX_VALUE)
+                .addContainerGap(319, Short.MAX_VALUE)
                 .addComponent(selectAllBtn)
                 .addGap(31, 31, 31)
                 .addComponent(rmSelectionBtn)
@@ -153,23 +177,23 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                 .addComponent(delSelectedBtn)
                 .addGap(20, 20, 20))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 134, Short.MAX_VALUE)
-                .addGap(0, 0, 0)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 579, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
-                    .addComponent(jScrollPane2))
-                .addGap(18, 18, 18)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(selectAllBtn)
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(rmSelectionBtn)
                         .addComponent(delSelectedBtn)))
-                .addContainerGap(46, Short.MAX_VALUE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         tabs.addTab("Danh Sách", jPanel1);
@@ -177,8 +201,10 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel1.setText("Mã loại");
 
+        txtPrice.setText("0.0");
+
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel2.setText("Tên loại");
+        jLabel2.setText("Đơn giá");
 
         inputNewBtn.setText("Nhập mới");
         inputNewBtn.addActionListener(new java.awt.event.ActionListener() {
@@ -211,21 +237,20 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
         });
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel3.setText("Mã loại");
+        jLabel3.setText("Tên đồ nước");
 
         jLabel4.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
-        jLabel4.setText("Tên loại");
+        jLabel4.setText("Giảm giá");
 
         jLabel5.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel5.setText("Loại");
 
-        cboCategories.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-
         bGrStatus.add(rdoAvailable);
+        rdoAvailable.setSelected(true);
         rdoAvailable.setText("Sẵn có");
 
-        bGrStatus.add(jRadioButton2);
-        jRadioButton2.setText("Hết hàng");
+        bGrStatus.add(rdoSailOut);
+        rdoSailOut.setText("Hết hàng");
 
         jLabel6.setFont(new java.awt.Font("Segoe UI", 1, 14)); // NOI18N
         jLabel6.setText("Trạng thái");
@@ -237,6 +262,15 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
             }
         });
 
+        sldDiscount.setValue(0);
+        sldDiscount.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                sldDiscountStateChanged(evt);
+            }
+        });
+
+        lblSliderValue.setText("0%");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
@@ -244,33 +278,38 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator1)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(6, 6, 6)
                         .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(jLabel1)
-                            .addComponent(txtName, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                            .addComponent(txtPrice, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
                             .addComponent(txtId)
                             .addComponent(jLabel2)
                             .addComponent(jLabel5)
                             .addComponent(cboCategories, javax.swing.GroupLayout.PREFERRED_SIZE, 166, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtTypeId)
-                                .addComponent(txtTypeName, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE))
                             .addComponent(jLabel3)
                             .addComponent(jLabel4)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(rdoAvailable)
                                 .addGap(18, 18, 18)
-                                .addComponent(jRadioButton2))
-                            .addComponent(jLabel6))
-                        .addGap(33, 33, 33)))
-                .addContainerGap())
+                                .addComponent(rdoSailOut))
+                            .addComponent(jLabel6)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(jPanel2Layout.createSequentialGroup()
+                                    .addComponent(sldDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(lblSliderValue, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(43, 43, 43))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jSeparator1)
+                        .addContainerGap())))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 359, Short.MAX_VALUE)
+                .addGap(0, 360, Short.MAX_VALUE)
                 .addComponent(createBtn)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(updateBtn)
@@ -294,15 +333,17 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel2)
                                 .addGap(0, 0, 0)
-                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(sldDiscount, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblSliderValue)))
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel3)
                                 .addGap(0, 0, 0)
-                                .addComponent(txtTypeId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(29, 29, 29)
                                 .addComponent(jLabel4)
-                                .addGap(0, 0, 0)
-                                .addComponent(txtTypeName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(22, 22, 22)))
                         .addGap(29, 29, 29)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel5)
@@ -311,20 +352,20 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(cboCategories, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(rdoAvailable)
-                            .addComponent(jRadioButton2))
-                        .addGap(18, 18, 18))
+                            .addComponent(rdoSailOut))
+                        .addGap(51, 51, 51))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(lblImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)))
+                        .addGap(27, 27, 27)))
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
+                .addGap(36, 36, 36)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(createBtn)
                     .addComponent(updateBtn)
                     .addComponent(deleteBtn)
                     .addComponent(inputNewBtn))
-                .addContainerGap(10, Short.MAX_VALUE))
+                .addContainerGap(47, Short.MAX_VALUE))
         );
 
         tabs.addTab("Biểu Mẫu", jPanel2);
@@ -346,28 +387,40 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblDrinksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDrinksMouseClicked
-
+        if(evt.getClickCount() == 2) {
+            this.edit();
+        }
     }//GEN-LAST:event_tblDrinksMouseClicked
 
     private void delSelectedBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delSelectedBtnActionPerformed
+        this.deleteCheckedItems();
     }//GEN-LAST:event_delSelectedBtnActionPerformed
 
     private void rmSelectionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmSelectionBtnActionPerformed
+        this.uncheckAll();
     }//GEN-LAST:event_rmSelectionBtnActionPerformed
 
     private void selectAllBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllBtnActionPerformed
+        this.checkAll();
     }//GEN-LAST:event_selectAllBtnActionPerformed
 
     private void inputNewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNewBtnActionPerformed
+        this.clear();
     }//GEN-LAST:event_inputNewBtnActionPerformed
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
+        this.delete();
+        tabs.setSelectedIndex(0);
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
+        this.update();
+        tabs.setSelectedIndex(0);
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
+        this.create();
+        tabs.setSelectedIndex(0);
     }//GEN-LAST:event_createBtnActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
@@ -377,6 +430,14 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     private void lblImageMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lblImageMouseClicked
         this.chooseFile();
     }//GEN-LAST:event_lblImageMouseClicked
+
+    private void tblCategoriesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoriesMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblCategoriesMouseClicked
+
+    private void sldDiscountStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_sldDiscountStateChanged
+        lblSliderValue.setText(sldDiscount.getValue()+"%");
+    }//GEN-LAST:event_sldDiscountStateChanged
 
     /**
      * @param args the command line arguments
@@ -434,23 +495,24 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
-    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
-    private javax.swing.JRadioButton jRadioButton2;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblImage;
+    private javax.swing.JLabel lblSliderValue;
     private javax.swing.JRadioButton rdoAvailable;
+    private javax.swing.JRadioButton rdoSailOut;
     private javax.swing.JButton rmSelectionBtn;
     private javax.swing.JButton selectAllBtn;
+    private javax.swing.JSlider sldDiscount;
     private javax.swing.JTabbedPane tabs;
+    private javax.swing.JTable tblCategories;
     private javax.swing.JTable tblDrinks;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtName;
-    private javax.swing.JTextField txtTypeId;
-    private javax.swing.JTextField txtTypeName;
+    private javax.swing.JTextField txtPrice;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 
@@ -462,12 +524,11 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     public void fillCategories() {
         DefaultComboBoxModel cboModel = (DefaultComboBoxModel) cboCategories.getModel();
         cboModel.removeAllElements();
-        DefaultTableModel tblModel = (DefaultTableModel) tblDrinks.getModel();
+        DefaultTableModel tblModel = (DefaultTableModel) tblCategories.getModel();
         tblModel.setRowCount(0);
-        CategoryDAO cdao = new CategoryDAOImpl();
-        categories = cdao.findAll();
+        categories = new CategoryDAOImpl().findAll();
         categories.forEach(category -> {
-            cboModel.addElement(category);
+            cboModel.addElement(category.getName());
             tblModel.addRow(new Object[]{category.getName()});
         });
 
@@ -489,63 +550,84 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
     @Override
     public void open() {
         this.setLocationRelativeTo(null);
+        this.fillToTable();
+        this.fillCategories();
     }
 
     @Override
     public void setForm(Drinks drinks) {
-
+        txtId.setText(drinks.getId());
+        txtName.setText(drinks.getName());
+        txtPrice.setText(String.valueOf(drinks.getUnitPrice()));
+        rdoSailOut.setSelected(!drinks.isAvailable());
+        sldDiscount.setValue((int) drinks.getDiscount());
+        cboCategories.setSelectedIndex(categories.indexOf(
+            categories.stream().filter(
+                    c -> c.getId().equals(drinks.getCategoryId()))
+                    .findFirst().orElseThrow()
+        ));
     }
 
     @Override
     public Drinks getForm() {
-        return null;
+        String filename = lblImage.getToolTipText();
+        if (filename == null) filename = "";
+        cboCategories.getModel().getSelectedItem();
+        return new Drinks(
+                txtId.getText(), txtName.getText(),
+                Double.parseDouble(txtPrice.getText()),
+                sldDiscount.getValue(),
+                filename, rdoAvailable.isSelected(),
+                categories.get(cboCategories.getSelectedIndex()).getId()
+        );
     }
 
     @Override
     public void fillToTable() {
         DefaultTableModel model = (DefaultTableModel) tblDrinks.getModel();
         model.setRowCount(0);
+        items = dao.findAll();
 
-        Categories category = categories.get(tblDrinks.getSelectedRow());
-
-        items = dao.findByCategoryId(category.getId()); // thay vì findAll()
         items.forEach(item -> {
             Object[] rowData = {
-                    item.getId(),
-                    item.getName(),
-                    item.getUnitPrice(),
-                    item.getDiscount(),
+                    item.getId(), item.getName(),
+                    item.getUnitPrice(), item.getDiscount(),
                     item.isAvailable()? "Sẵn có" : "Hết hàng",
                     false
             };
             model.addRow(rowData);
         });
-        this.clear();
     }
 
     @Override
     public void edit() {
-
+        Drinks entity = items.get(tblDrinks.getSelectedRow());
+        this.setForm(entity);
+        this.setEditable(true);
+        tabs.setSelectedIndex(1);
     }
 
     @Override
     public void create() {
-
+        dao.create(this.getForm());
+        this.fillToTable();
     }
 
     @Override
     public void update() {
-
+        dao.update(this.getForm());
+        this.fillToTable();
     }
 
     @Override
     public void delete() {
-
+        dao.deleteById(txtId.getText());
+        this.fillToTable();
     }
 
     @Override
     public void clear() {
-
+        this.setForm(new Drinks());
     }
 
     @Override
@@ -558,17 +640,30 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
 
     @Override
     public void checkAll() {
-
+        this.setCheckedAll(true);
     }
 
     @Override
     public void uncheckAll() {
+        this.setCheckedAll(false);
+    }
 
+    private void setCheckedAll(boolean checked) {
+        for (int i = 0; i < tblDrinks.getRowCount(); i++) {
+            tblDrinks.setValueAt(checked, i, tblDrinks.getColumnCount()-1);
+        }
     }
 
     @Override
     public void deleteCheckedItems() {
-
+        if (XDialog.confirm("Bạn thực sự muốn xóa các mục chọn?")) {
+            for (int i = 0; i < tblDrinks.getRowCount(); i++) {
+                if ((Boolean) tblDrinks.getValueAt(i, 2)) {
+                    dao.deleteById(items.get(i).getId());
+                }
+            }
+            this.fillToTable();
+        }
     }
 
 }
