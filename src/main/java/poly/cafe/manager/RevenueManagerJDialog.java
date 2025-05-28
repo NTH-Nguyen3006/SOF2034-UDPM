@@ -49,17 +49,10 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
         jSeparator1 = new javax.swing.JSeparator();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblByCategory = new javax.swing.JTable();
-        delSelectedBtn = new javax.swing.JButton();
-        rmSelectionBtn = new javax.swing.JButton();
-        selectAllBtn = new javax.swing.JButton();
         jSeparator3 = new javax.swing.JSeparator();
         revenueEmployee = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblByUser = new javax.swing.JTable();
-        deleteBtn = new javax.swing.JButton();
-        updateBtn = new javax.swing.JButton();
-        createBtn = new javax.swing.JButton();
-        inputNewBtn = new javax.swing.JButton();
         jSeparator2 = new javax.swing.JSeparator();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -104,52 +97,23 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
                 {null, null, null, null, null, null}
             },
             new String [] {
-                "Mã phiếu", "Thẻ số", "Thời điểm tạo", "Trạng thái", "Tên tài khoản", ""
+                "Loại", "Doanh thu", "Số lượng", "Giá thấp nhất", "Giá cao nhất", "Giá trung bình"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Boolean.class
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false, false, false
             };
 
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
             }
         });
         jScrollPane1.setViewportView(tblByCategory);
-
-        delSelectedBtn.setText("xóa mục đã chọn");
-        delSelectedBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                delSelectedBtnActionPerformed(evt);
-            }
-        });
-
-        rmSelectionBtn.setText("Bỏ chọn tất cả");
-        rmSelectionBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rmSelectionBtnActionPerformed(evt);
-            }
-        });
-
-        selectAllBtn.setText("Chọn tất cả");
-        selectAllBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                selectAllBtnActionPerformed(evt);
-            }
-        });
 
         javax.swing.GroupLayout revenuePlaseLayout = new javax.swing.GroupLayout(revenuePlase);
         revenuePlase.setLayout(revenuePlaseLayout);
         revenuePlaseLayout.setHorizontalGroup(
             revenuePlaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, revenuePlaseLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(selectAllBtn)
-                .addGap(31, 31, 31)
-                .addComponent(rmSelectionBtn)
-                .addGap(27, 27, 27)
-                .addComponent(delSelectedBtn)
-                .addGap(23, 23, 23))
             .addGroup(revenuePlaseLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(revenuePlaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -167,13 +131,7 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 252, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(revenuePlaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(selectAllBtn)
-                    .addGroup(revenuePlaseLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(rmSelectionBtn)
-                        .addComponent(delSelectedBtn)))
-                .addGap(14, 14, 14))
+                .addGap(49, 49, 49))
         );
 
         tabs.addTab("Doanh thu từng loại", revenuePlase);
@@ -186,7 +144,7 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
                 {null, null, null, null, null}
             },
             new String [] {
-                "Đồ uống", "Đơn giá", "Giảm giá", "Số lượng", "Thành tiền"
+                "Nhân viên", "Doanh thu", "Số bill", "Bill đầu tiên", "Bill cuối cùng"
             }
         ) {
             boolean[] canEdit = new boolean [] {
@@ -199,36 +157,6 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
         });
         jScrollPane2.setViewportView(tblByUser);
 
-        deleteBtn.setText("Xóa");
-        deleteBtn.setEnabled(false);
-        deleteBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                deleteBtnActionPerformed(evt);
-            }
-        });
-
-        updateBtn.setText("Cập nhật");
-        updateBtn.setEnabled(false);
-        updateBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                updateBtnActionPerformed(evt);
-            }
-        });
-
-        createBtn.setText("Tạo mới");
-        createBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                createBtnActionPerformed(evt);
-            }
-        });
-
-        inputNewBtn.setText("Nhập mới");
-        inputNewBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                inputNewBtnActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout revenueEmployeeLayout = new javax.swing.GroupLayout(revenueEmployee);
         revenueEmployee.setLayout(revenueEmployeeLayout);
         revenueEmployeeLayout.setHorizontalGroup(
@@ -237,16 +165,7 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
                 .addGap(20, 20, 20)
                 .addGroup(revenueEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jSeparator2, javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE)
-                    .addGroup(revenueEmployeeLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(createBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(updateBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(deleteBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(inputNewBtn)))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 613, Short.MAX_VALUE))
                 .addGap(20, 20, 20))
         );
         revenueEmployeeLayout.setVerticalGroup(
@@ -256,13 +175,7 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(revenueEmployeeLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(createBtn)
-                    .addComponent(updateBtn)
-                    .addComponent(deleteBtn)
-                    .addComponent(inputNewBtn))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(49, Short.MAX_VALUE))
         );
 
         tabs.addTab("Doanh thu nhân viên", revenueEmployee);
@@ -309,34 +222,6 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
     private void btnFilterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFilterActionPerformed
         this.fillRevenue();
     }//GEN-LAST:event_btnFilterActionPerformed
-
-    private void delSelectedBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delSelectedBtnActionPerformed
-        this.deleteCheckedItems();
-    }//GEN-LAST:event_delSelectedBtnActionPerformed
-
-    private void rmSelectionBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rmSelectionBtnActionPerformed
-        this.uncheckAll();
-    }//GEN-LAST:event_rmSelectionBtnActionPerformed
-
-    private void selectAllBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectAllBtnActionPerformed
-        this.checkAll();
-    }//GEN-LAST:event_selectAllBtnActionPerformed
-
-    private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
-        this.delete();
-    }//GEN-LAST:event_deleteBtnActionPerformed
-
-    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
-        this.update();
-    }//GEN-LAST:event_updateBtnActionPerformed
-
-    private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
-        this.create();
-    }//GEN-LAST:event_createBtnActionPerformed
-
-    private void inputNewBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputNewBtnActionPerformed
-        this.clear();
-    }//GEN-LAST:event_inputNewBtnActionPerformed
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         this.open();
@@ -395,10 +280,6 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnFilter;
     private javax.swing.JComboBox<String> cboTimeRanges;
-    private javax.swing.JButton createBtn;
-    private javax.swing.JButton delSelectedBtn;
-    private javax.swing.JButton deleteBtn;
-    private javax.swing.JButton inputNewBtn;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JScrollPane jScrollPane1;
@@ -408,14 +289,11 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JPanel revenueEmployee;
     private javax.swing.JPanel revenuePlase;
-    private javax.swing.JButton rmSelectionBtn;
-    private javax.swing.JButton selectAllBtn;
     private javax.swing.JTabbedPane tabs;
     private javax.swing.JTable tblByCategory;
     private javax.swing.JTable tblByUser;
     private javax.swing.JTextField txtBegin;
     private javax.swing.JTextField txtEnd;
-    private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 
     RevenueDAO dao = new RevenueDAOimpl();
@@ -424,66 +302,6 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
     public void open() {
         this.setLocationRelativeTo(null);
         this.selectTimeRange();
-    }
-
-    @Override
-    public void setForm(Revenue revenue) {
-
-    }
-
-    @Override
-    public Revenue getForm() {
-        return null;
-    }
-
-    @Override
-    public void fillToTable() {
-
-    }
-
-    @Override
-    public void edit() {
-
-    }
-
-    @Override
-    public void create() {
-
-    }
-
-    @Override
-    public void update() {
-
-    }
-
-    @Override
-    public void delete() {
-
-    }
-
-    @Override
-    public void clear() {
-
-    }
-
-    @Override
-    public void setEditable(boolean editable) {
-
-    }
-
-    @Override
-    public void checkAll() {
-
-    }
-
-    @Override
-    public void uncheckAll() {
-
-    }
-
-    @Override
-    public void deleteCheckedItems() {
-
     }
 
     @Override
@@ -524,7 +342,7 @@ public class RevenueManagerJDialog extends javax.swing.JDialog implements Revenu
                     item.getQuantity(),
                     String.format("$%.2f", item.getMinPrice()),
                     String.format("$%.2f", item.getMaxPrice()),
-                    String.format("$%.2f", item.getAvgPrice())
+                    String.format("$%.2f", item.getAvgPrice()),
             };
             model.addRow(row);
         });

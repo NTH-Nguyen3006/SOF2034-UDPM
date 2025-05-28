@@ -79,7 +79,6 @@ public class XQuery {
             if (name.startsWith("set") && method.getParameterCount() == 1) {
                 try {
                     Object value = resultSet.getObject(name.substring(3));
-                    System.out.println(value);
                     method.invoke(bean, value);
                 } catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | SQLException e) {
                     System.out.printf("+ Column '%s' not found!\r\n", name.substring(3));
