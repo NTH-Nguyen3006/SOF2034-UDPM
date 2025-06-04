@@ -129,6 +129,7 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
         BillJDialog dialog = new BillJDialog((Frame) this.getOwner(), true);
         dialog.setBill(bill); // Cần khai báo vào BillJDialog @Setter Bill bill
         dialog.setVisible(true);
+        dialog.setLocationRelativeTo(null);
     }
 
     private void loadCards() {// tải và hiển thị các thẻ lên cửa sổ bán hàng

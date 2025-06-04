@@ -2,11 +2,15 @@ package poly.cafe.dao.impl;
 
 import poly.cafe.dao.impl.interfaces.CardDAO;
 import poly.cafe.entity.Cards;
+import poly.cafe.util.XQuery;
 
 import java.util.List;
 
 
 public class CardDAOImpl implements CardDAO {
+    String findAllSql = """
+            SELECT * FROM [PolyCafe].[dbo].[Cards]
+            """;
 
     @Override
     public Cards create(Cards entity) {
@@ -25,7 +29,7 @@ public class CardDAOImpl implements CardDAO {
 
     @Override
     public List<Cards> findAll() {
-        return List.of();
+        return XQuery.getBeanList(Cards.class, findAllSql);
     }
 
     @Override

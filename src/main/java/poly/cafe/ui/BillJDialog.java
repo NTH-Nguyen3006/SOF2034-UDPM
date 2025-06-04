@@ -5,20 +5,28 @@
 package poly.cafe.ui;
 
 import lombok.Setter;
+import poly.cafe.dao.impl.BillDAOImpl;
 import poly.cafe.dao.impl.BillDetailDAOImpl;
+import poly.cafe.dao.impl.interfaces.BillDAO;
 import poly.cafe.dao.impl.interfaces.BillDetailDAO;
 import poly.cafe.entity.BillDetails;
 import poly.cafe.entity.Bills;
-import poly.cafe.ui.Controller.BillDetailController;
-
+import poly.cafe.ui.Controller.BillController;
+import poly.cafe.util.XAuth;
+import poly.cafe.util.XDate;
+import poly.cafe.util.XDialog;
+import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 /**
  *
  * @author Admin
  */
 
-public class BillJDialog extends javax.swing.JDialog implements BillDetailController {
+public class BillJDialog extends javax.swing.JDialog implements BillController {
 
     /**
      * Creates new form BillJDialog
@@ -38,17 +46,17 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
     private void initComponents() {
 
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtBillId = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtUsername = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        txtCartId = new javax.swing.JTextField();
+        txtStatus = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
-        jTextField5 = new javax.swing.JTextField();
+        txtCheckin = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
-        jTextField6 = new javax.swing.JTextField();
+        txtCheckout = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
         tblBillDetails = new javax.swing.JTable();
         btnRemove = new javax.swing.JButton();
@@ -57,12 +65,19 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
         btnCheckout = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosed(java.awt.event.WindowEvent evt) {
+                formWindowClosed(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel1.setText("Mã phiếu");
 
         jLabel2.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel2.setText("Nhân viên");
+
+        txtUsername.setEditable(false);
 
         jLabel3.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         jLabel3.setText("Thẻ số");
@@ -84,12 +99,24 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
                 "", "Mã phiếu", "Đồ uống", "Đơn giá", "Giảm giá", "Số lượng", "Thành tiền"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false, false, false, false, false, false
+            Class[] types = new Class [] {
+                java.lang.Boolean.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class, java.lang.Object.class
             };
+            boolean[] canEdit = new boolean [] {
+                true, false, false, false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
+            }
+        });
+        tblBillDetails.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblBillDetailsMouseClicked(evt);
             }
         });
         jScrollPane1.setViewportView(tblBillDetails);
@@ -106,12 +133,32 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
         }
 
         btnRemove.setText("Xóa đồ uống");
+        btnRemove.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoveActionPerformed(evt);
+            }
+        });
 
         btnAdd.setText("Thêm đồ uống");
+        btnAdd.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddActionPerformed(evt);
+            }
+        });
 
         btnCancel.setText("Hủy phiếu");
+        btnCancel.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelActionPerformed(evt);
+            }
+        });
 
         btnCheckout.setText("Thanh toán");
+        btnCheckout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCheckoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -132,21 +179,21 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtBillId, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel2)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel3)
-                            .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCartId, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel5)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel6)
-                            .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(14, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -157,27 +204,27 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(0, 0, 0)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCheckin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19)
                         .addComponent(jLabel6)
                         .addGap(0, 0, 0)
-                        .addComponent(jTextField6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtCheckout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel1)
                         .addGap(0, 0, 0)
-                        .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtBillId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19)
                         .addComponent(jLabel2)
                         .addGap(0, 0, 0)
-                        .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jLabel3)
                         .addGap(0, 0, 0)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtCartId, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(19, 19, 19)
                         .addComponent(jLabel4)
                         .addGap(0, 0, 0)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
@@ -191,6 +238,32 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnCheckoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCheckoutActionPerformed
+        this.checkout();
+    }//GEN-LAST:event_btnCheckoutActionPerformed
+
+    private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
+        this.cancel();
+    }//GEN-LAST:event_btnCancelActionPerformed
+
+    private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
+        this.showDrinkJDialog();
+    }//GEN-LAST:event_btnAddActionPerformed
+
+    private void btnRemoveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoveActionPerformed
+        this.removeDrinks();
+    }//GEN-LAST:event_btnRemoveActionPerformed
+
+    private void formWindowClosed(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosed
+        this.close();
+    }//GEN-LAST:event_formWindowClosed
+
+    private void tblBillDetailsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblBillDetailsMouseClicked
+        if (evt.getClickCount() == 2) { 
+            this.updateQuantity(); 
+        } 
+    }//GEN-LAST:event_tblBillDetailsMouseClicked
 
     /**
      * @param args the command line arguments
@@ -234,20 +307,26 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
         });
     }
 
-    @Setter
-    Bills bill;
-
+    @Setter Bills bill;
     BillDetailDAO billDetailDao = new BillDetailDAOImpl();
+    BillDAO billDao = new BillDAOImpl();
     java.util.List<BillDetails> billDetails = billDetailDao.findAll();
 
     @Override
     public void open() {
-
+        this.setLocationRelativeTo(null);
+        this.fillBillDetails();
+        txtUsername.setText(XAuth.user.getUsername());
     }
 
     @Override
     public void close() {
-
+        for (int i = 0; i < tblBillDetails.getRowCount(); i++) {
+            Boolean checked = (Boolean) tblBillDetails.getValueAt(i, 0);
+            if(checked)
+                billDetailDao.deleteById(billDetails.get(i).getId());
+        }
+        this.fillBillDetails();
     }
 
     @Override
@@ -275,21 +354,85 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
 
     @Override
     public void updateQuantity() {
-
+        if (bill.getStatus() == 0) { // chưa thanh toán hoặc chưa bị canceled
+            String input = XDialog.prompt("Số lượng mới?");
+            if (input != null && input.length() > 0) {
+                BillDetails detail = billDetails.get(tblBillDetails.getSelectedRow());
+                detail.setQuantity(Integer.parseInt(input));
+                billDetailDao.update(detail);
+                this.fillBillDetails();
+            }
+        }
     }
 
     @Override
     public void checkout() {
-
+        for (int i = 0; i < tblBillDetails.getRowCount(); i++) {
+            Boolean checked = (Boolean) tblBillDetails.getValueAt(i, 0);
+            if(checked) {
+                billDetailDao.deleteById(billDetails.get(i).getId());
+                String comfirmMessage = String.format("Phiểu %d - tổng tiền thanh toán là: %.1f", billDetails.get(i).getId(),
+                        (double) tblBillDetails.getValueAt(i, tblBillDetails.getColumnCount()-1));
+                if(XDialog.confirm(comfirmMessage)) {
+                    Date now = java.sql.Date.valueOf(
+                            LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+                            ));
+                    this.bill.setCheckout(now);
+                    this.bill.setStatus(1);
+                }
+            }
+        }
     }
 
     @Override
     public void cancel() {
-
+        if (billDetails.isEmpty()) {
+            billDao.deleteById(bill.getId());
+            this.dispose();
+        } else if (XDialog.confirm("Bạn muốn hủy phiếu bán hàng?")) {
+            bill.setStatus(Bills.Status.Canceled.ordinal());
+            billDao.update(bill);
+            this.setForm(bill);
+        }
     }
 
-    void fillBillDetails() {
+    void setForm(Bills bill) { // hiển thị bill lên form
+        txtBillId.setText(String.valueOf(bill.getId()));
+        txtCartId.setText("Card #" + bill.getCardId());
+        txtCheckin.setText(XDate.format(bill.getCheckin(), "HH:mm:ss dd-MM-yyyy"));
+        txtUsername.setText(bill.getUsername());
+        String[] statuses = {"Servicing", "Completed", "Canceled"};
+        txtStatus.setText(statuses[bill.getStatus()]);
+        if (bill.getCheckout() != null) {
+            txtCheckout.setText(XDate.format(bill.getCheckout(), "HH:mm:ss dd-MM-yyyy"));
+        }
+        boolean editable = (bill.getStatus() == 0);
+        btnAdd.setEnabled(editable);
+        btnCancel.setEnabled(editable);
+        btnCheckout.setEnabled(editable);
+        btnRemove.setEnabled(editable);
+    }
 
+    public Bills getForm() {
+        return Bills.builder()
+            .id(Long.parseLong(txtBillId.getText()))
+            .checkin(java.sql.Date.valueOf(
+                    LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
+                    ))).username(XAuth.user.getUsername())
+            .status(0).checkout(null) .build();
+    }
+
+    public void fillBillDetails() {
+        billDetails = billDetailDao.findAll();
+        DefaultTableModel model = (DefaultTableModel) tblBillDetails.getModel();
+        model.setRowCount(0);
+        billDetails.forEach((bd -> model.addRow(
+            new Object[] {
+                false, bd.getId(), bd.getDrinkName(),
+                bd.getUnitPrice(), bd.getDiscount(), bd.getQuantity(),
+                (1-(bd.getDiscount()/100)) * bd.getQuantity() * bd.getUnitPrice()
+            }
+        )));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -304,12 +447,12 @@ public class BillJDialog extends javax.swing.JDialog implements BillDetailContro
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField6;
     private javax.swing.JTable tblBillDetails;
+    private javax.swing.JTextField txtBillId;
+    private javax.swing.JTextField txtCartId;
+    private javax.swing.JTextField txtCheckin;
+    private javax.swing.JTextField txtCheckout;
+    private javax.swing.JTextField txtStatus;
+    private javax.swing.JTextField txtUsername;
     // End of variables declaration//GEN-END:variables
 }

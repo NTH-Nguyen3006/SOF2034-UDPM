@@ -10,6 +10,10 @@ import java.util.Date;
 @Data
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Bills {
+    public static enum Status {
+        Servicing,Completed, Canceled;
+    }
+
     Long id;
     String username;
     Integer cardId;
