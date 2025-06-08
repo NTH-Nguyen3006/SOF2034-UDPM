@@ -127,9 +127,8 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
         BillDAO dao = new BillDAOImpl();
         Bills bill = dao.findServicingByCardId(cardId); // tải bill đang phục vụ của thẻ
         BillJDialog dialog = new BillJDialog((Frame) this.getOwner(), true);
-        dialog.setBill(bill); // Cần khai báo vào BillJDialog @Setter Bill bill
+        dialog.setBill(bill);
         dialog.setVisible(true);
-        dialog.setLocationRelativeTo(null);
     }
 
     private void loadCards() {// tải và hiển thị các thẻ lên cửa sổ bán hàng
@@ -144,7 +143,7 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
         JButton btnCard = new JButton();
         btnCard.setText(String.format("Card #%d", card.getId()));
         btnCard.setPreferredSize(new Dimension(0, 80));
-        btnCard.setEnabled(card.getStatus() == 0);
+        btnCard.setEnabled(card.getStatus() == 1);
         btnCard.setBackground(btnCard.isEnabled() ? Color.GREEN : Color.GRAY);
         btnCard.setActionCommand(String.valueOf(card.getId()));
         btnCard.addActionListener((ActionEvent e) -> {

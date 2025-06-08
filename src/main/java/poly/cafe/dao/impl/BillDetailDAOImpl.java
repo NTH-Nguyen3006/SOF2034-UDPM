@@ -46,19 +46,24 @@ public class BillDetailDAOImpl implements BillDetailDAO {
     @Override
     public BillDetails create(BillDetails entity) {
         //BillId, DrinkId, UnitPrice, Discount, Quantity
-        int rowAffect = XJdbc.executeUpdate(createSql, entity.getBillId(),
-                entity.getDrinkName(), entity.getUnitPrice(), entity.getDiscount(),
-                entity.getQuantity());
+        int rowAffect = XJdbc.executeUpdate(createSql, new Object[] {
+                entity.getBillId(), entity.getDrinkId(),
+                entity.getUnitPrice(), entity.getDiscount(),
+                entity.getQuantity()
+        });
 
-        if (rowAffect > 0) return XJdbc.getValue(findByBillIdSql, entity.getBillId());
+        if (rowAffect > 0) return XQuery.getSingleBean(
+                BillDetails.class ,findByBillIdSql, entity.getBillId());
         return null;
     }
 
     @Override
     public void update(BillDetails entity) {
-        int rowAffect = XJdbc.executeUpdate(updateSql, entity.getBillId(),
-                entity.getDrinkName(), entity.getUnitPrice(), entity.getDiscount(),
-                entity.getQuantity(), entity.getId());
+        int rowAffect = XJdbc.executeUpdate(updateSql, new Object[]{
+                entity.getBillId(), entity.getDrinkId(),
+                entity.getUnitPrice(), entity.getDiscount(),
+                entity.getQuantity(), entity.getId()
+        });
     }
 
     @Override

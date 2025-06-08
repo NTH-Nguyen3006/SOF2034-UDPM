@@ -323,6 +323,7 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
     public void open() {
         this.setLocationRelativeTo(null);
         txtUsername.setText(XAuth.user.getUsername());
+        this.setForm(this.bill);
         this.fillBillDetails();
     }
 
@@ -363,7 +364,7 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
     public void updateQuantity() {
         if (bill.getStatus() == 0) { // chưa thanh toán hoặc chưa bị canceled
             String input = XDialog.prompt("Số lượng mới?");
-            if (input != null && input.length() > 0) {
+            if (input != null && !input.isBlank()) {
                 BillDetails detail = billDetails.get(tblBillDetails.getSelectedRow());
                 detail.setQuantity(Integer.parseInt(input));
                 billDetailDao.update(detail);
@@ -374,20 +375,17 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
 
     @Override
     public void checkout() {
+        double amount = 0;
         for (int i = 0; i < tblBillDetails.getRowCount(); i++) {
-            Boolean checked = (Boolean) tblBillDetails.getValueAt(i, 0);
-            if(checked) {
-                billDetailDao.deleteById(billDetails.get(i).getId());
-                String comfirmMessage = String.format("Phiểu %d - tổng tiền thanh toán là: %.1f", billDetails.get(i).getId(),
-                        (double) tblBillDetails.getValueAt(i, tblBillDetails.getColumnCount()-1));
-                if(XDialog.confirm(comfirmMessage)) {
-                    Date now = java.sql.Date.valueOf(
-                            LocalDate.now().format(DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss")
-                            ));
-                    this.bill.setCheckout(now);
-                    this.bill.setStatus(1);
-                }
-            }
+            amount += (double) tblBillDetails.getValueAt(i, tblBillDetails.getColumnCount()-1);
+        }
+        String comfirmMessage = String.format("Phiểu %d - tổng tiền thanh toán là: %.1f",
+                this.bill.getId(), amount);
+        if(XDialog.confirm(comfirmMessage)) {
+            bill.setStatus(Bills.Status.Completed.ordinal());
+            bill.setCheckout(new Date());
+            billDao.update(bill);
+            this.setForm(bill);
         }
     }
 
@@ -430,7 +428,7 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
     }
 
     public void fillBillDetails() {
-        billDetails = billDetailDao.findAll();
+        billDetails = billDetailDao.findByBillId(bill.getId());
         DefaultTableModel model = (DefaultTableModel) tblBillDetails.getModel();
         model.setRowCount(0);
         billDetails.forEach((bd -> model.addRow(

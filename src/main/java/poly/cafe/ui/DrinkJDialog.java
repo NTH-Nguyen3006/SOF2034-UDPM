@@ -153,7 +153,6 @@ public class DrinkJDialog extends javax.swing.JDialog implements DrinkController
     }//GEN-LAST:event_formWindowOpened
 
     @Setter Bills bill;
-
     /**
      * @param args the command line arguments
      */
@@ -244,8 +243,10 @@ public class DrinkJDialog extends javax.swing.JDialog implements DrinkController
     @Override
     public void addDrinkToBill() {
         String quantity = XDialog.prompt("Số lượng?");
-        if(quantity != null && quantity.length() > 0){
+        System.out.println(quantity);
+        if(quantity != null && !quantity.isBlank()){
             Drinks drink = drinks.get(tblDrinks.getSelectedRow());
+            System.out.println(drink);
             BillDetails detail = new BillDetails();
             detail.setBillId(bill.getId());
             detail.setDiscount(drink.getDiscount());
