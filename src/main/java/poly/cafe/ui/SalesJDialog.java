@@ -13,7 +13,7 @@ import poly.cafe.dao.impl.interfaces.BillDAO;
 import poly.cafe.dao.impl.interfaces.CardDAO;
 import poly.cafe.entity.Bills;
 import poly.cafe.entity.Cards;
-import poly.cafe.ui.Controller.SalesController;
+import poly.cafe.manager.Controller.SalesController;
 
 import javax.swing.*;
 
@@ -137,6 +137,7 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
         List<Cards> cards = dao.findAll();
         pnlCards.removeAll();
         cards.forEach(card -> pnlCards.add(this.createButton(card)));
+        this.pack();
     }
 
     private JButton createButton(Cards card) { // tạo Jbutton cho thẻ

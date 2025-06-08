@@ -10,6 +10,7 @@ import poly.cafe.dao.impl.interfaces.BillDAO;
 import poly.cafe.dao.impl.interfaces.BillDetailDAO;
 import poly.cafe.entity.BillDetails;
 import poly.cafe.entity.Bills;
+import poly.cafe.ui.Controller.BillController;
 import poly.cafe.util.*;
 
 import javax.swing.table.DefaultTableModel;

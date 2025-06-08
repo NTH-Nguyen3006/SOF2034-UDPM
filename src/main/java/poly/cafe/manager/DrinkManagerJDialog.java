@@ -6,11 +6,10 @@ package poly.cafe.manager;
 
 import poly.cafe.dao.impl.CategoryDAOImpl;
 import poly.cafe.dao.impl.DrinkDAOImpl;
-import poly.cafe.dao.impl.interfaces.CategoryDAO;
 import poly.cafe.dao.impl.interfaces.DrinkDAO;
 import poly.cafe.entity.Categories;
 import poly.cafe.entity.Drinks;
-import poly.cafe.ui.Controller.DrinkController;
+import poly.cafe.manager.Controller.DrinkController;
 import poly.cafe.util.XDialog;
 import poly.cafe.util.XIcon;
 
@@ -19,7 +18,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import javax.swing.table.DefaultTableModel;
 import java.io.File;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  *

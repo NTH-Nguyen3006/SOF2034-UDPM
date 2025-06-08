@@ -11,7 +11,7 @@ import poly.cafe.dao.impl.interfaces.BillDAO;
 import poly.cafe.dao.impl.interfaces.BillDetailDAO;
 import poly.cafe.entity.BillDetails;
 import poly.cafe.entity.Bills;
-import poly.cafe.ui.Controller.BillController;
+import poly.cafe.manager.Controller.BillController;
 import poly.cafe.util.XAuth;
 import poly.cafe.util.XDate;
 import poly.cafe.util.XDialog;
@@ -68,6 +68,9 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
                 formWindowClosed(evt);
+            }
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
             }
         });
 
@@ -265,6 +268,10 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
         } 
     }//GEN-LAST:event_tblBillDetailsMouseClicked
 
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.open();
+    }//GEN-LAST:event_formWindowOpened
+
     /**
      * @param args the command line arguments
      */
@@ -315,8 +322,8 @@ public class BillJDialog extends javax.swing.JDialog implements BillController {
     @Override
     public void open() {
         this.setLocationRelativeTo(null);
-        this.fillBillDetails();
         txtUsername.setText(XAuth.user.getUsername());
+        this.fillBillDetails();
     }
 
     @Override

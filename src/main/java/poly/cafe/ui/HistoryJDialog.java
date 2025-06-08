@@ -7,7 +7,7 @@ package poly.cafe.ui;
 import poly.cafe.dao.impl.BillDAOImpl;
 import poly.cafe.dao.impl.interfaces.BillDAO;
 import poly.cafe.entity.Bills;
-import poly.cafe.ui.Controller.HistoryController;
+import poly.cafe.manager.Controller.HistoryController;
 import poly.cafe.util.TimeRange;
 import poly.cafe.util.XAuth;
 import poly.cafe.util.XDate;

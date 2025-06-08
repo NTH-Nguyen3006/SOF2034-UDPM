@@ -6,7 +6,7 @@ package poly.cafe.ui;
 
 import poly.cafe.dao.impl.UserDAOImpl;
 import poly.cafe.dao.impl.interfaces.UserDAO;
-import poly.cafe.ui.Controller.ChangePasswordController;
+import poly.cafe.manager.Controller.ChangePasswordController;
 import poly.cafe.util.XAuth;
 import poly.cafe.util.XDialog;
 

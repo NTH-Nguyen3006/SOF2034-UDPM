@@ -7,7 +7,7 @@ package poly.cafe.ui;
 import poly.cafe.dao.impl.UserDAOImpl;
 import poly.cafe.dao.impl.interfaces.UserDAO;
 import poly.cafe.entity.Users;
-import poly.cafe.ui.Controller.LoginController;
+import poly.cafe.manager.Controller.LoginController;
 import poly.cafe.util.XAuth;
 import poly.cafe.util.XDialog;
 

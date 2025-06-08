@@ -1,4 +1,4 @@
-package poly.cafe.ui.Controller;
+package poly.cafe.manager.Controller;
 
 import poly.cafe.util.XDialog;
 

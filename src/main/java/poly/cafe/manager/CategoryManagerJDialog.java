@@ -7,7 +7,7 @@ package poly.cafe.manager;
 import poly.cafe.dao.impl.CategoryDAOImpl;
 import poly.cafe.dao.impl.interfaces.CategoryDAO;
 import poly.cafe.entity.Categories;
-import poly.cafe.ui.Controller.CategoryController;
+import poly.cafe.manager.Controller.CategoryController;
 import poly.cafe.util.XDialog;
 
 import javax.swing.table.DefaultTableModel;

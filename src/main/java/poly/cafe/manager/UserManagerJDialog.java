@@ -6,13 +6,11 @@ package poly.cafe.manager;
 
 import poly.cafe.dao.impl.UserDAOImpl;
 import poly.cafe.dao.impl.interfaces.UserDAO;
-import poly.cafe.entity.Categories;
 import poly.cafe.entity.Users;
-import poly.cafe.ui.Controller.UserController;
+import poly.cafe.manager.Controller.UserController;
 import poly.cafe.util.XDialog;
 
 import javax.swing.table.DefaultTableModel;
-import java.io.File;
 import java.util.List;
 
 /**

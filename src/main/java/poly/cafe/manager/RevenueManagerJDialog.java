@@ -7,7 +7,7 @@ package poly.cafe.manager;
 import poly.cafe.dao.impl.RevenueDAOimpl;
 import poly.cafe.dao.impl.interfaces.RevenueDAO;
 import poly.cafe.entity.Revenue;
-import poly.cafe.ui.Controller.RevenueController;
+import poly.cafe.manager.Controller.RevenueController;
 import poly.cafe.util.TimeRange;
 import poly.cafe.util.XDate;
 

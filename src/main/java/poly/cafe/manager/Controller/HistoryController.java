@@ -1,4 +1,4 @@
-package poly.cafe.ui.Controller;
+package poly.cafe.manager.Controller;
 
 public interface HistoryController {
     void open(); // hiển thị bill theo khoảng thời gian Hôm nay

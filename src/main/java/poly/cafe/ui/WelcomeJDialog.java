@@ -4,10 +4,8 @@
  */
 package poly.cafe.ui;
 
-import poly.cafe.ui.Controller.WelcomeController;
+import poly.cafe.manager.Controller.WelcomeController;
 import poly.cafe.util.XIcon;
-
-import javax.swing.*;
 
 /**
  *

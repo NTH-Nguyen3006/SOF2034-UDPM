@@ -1,16 +1,10 @@
 package poly.cafe.ui;
 
-import poly.cafe.ui.Controller.LoginController;
-import poly.cafe.ui.Controller.PolyCafeController;
+import poly.cafe.manager.Controller.PolyCafeController;
 import poly.cafe.util.XAuth;
 import poly.cafe.util.XIcon;
 
-import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
 import javax.swing.*;
-import java.awt.*;
-import java.io.File;
-import java.io.IOException;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license

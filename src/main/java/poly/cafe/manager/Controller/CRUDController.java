@@ -1,4 +1,4 @@
-package poly.cafe.ui.Controller;
+package poly.cafe.manager.Controller;
 
 public interface CRUDController<Entity> {
     void open(); // Xử lý mở cửa sổ

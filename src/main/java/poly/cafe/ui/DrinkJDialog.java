@@ -5,13 +5,26 @@
 package poly.cafe.ui;
 
 import lombok.Setter;
+import poly.cafe.dao.impl.BillDetailDAOImpl;
+import poly.cafe.dao.impl.CategoryDAOImpl;
+import poly.cafe.dao.impl.DrinkDAOImpl;
+import poly.cafe.dao.impl.interfaces.CategoryDAO;
+import poly.cafe.dao.impl.interfaces.DrinkDAO;
+import poly.cafe.entity.BillDetails;
 import poly.cafe.entity.Bills;
+import poly.cafe.entity.Categories;
+import poly.cafe.entity.Drinks;
+import poly.cafe.ui.Controller.DrinkController;
+import poly.cafe.util.XDialog;
+
+import javax.swing.table.DefaultTableModel;
+import java.util.List;
 
 /**
  *
  * @author Admin
  */
-public class DrinkJDialog extends javax.swing.JDialog {
+public class DrinkJDialog extends javax.swing.JDialog implements DrinkController {
 
     /**
      * Creates new form DrinkJDialog
@@ -36,6 +49,11 @@ public class DrinkJDialog extends javax.swing.JDialog {
         tblCategories = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowOpened(java.awt.event.WindowEvent evt) {
+                formWindowOpened(evt);
+            }
+        });
 
         tblDrinks.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -121,12 +139,18 @@ public class DrinkJDialog extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblDrinksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblDrinksMouseClicked
-
+        if (evt.getClickCount() == 2) {
+            this.addDrinkToBill();
+        }
     }//GEN-LAST:event_tblDrinksMouseClicked
 
     private void tblCategoriesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblCategoriesMouseClicked
-        // TODO add your handling code here:
+        this.fillDrinks();
     }//GEN-LAST:event_tblCategoriesMouseClicked
+
+    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        this.open();
+    }//GEN-LAST:event_formWindowOpened
 
     @Setter Bills bill;
 
@@ -178,4 +202,57 @@ public class DrinkJDialog extends javax.swing.JDialog {
     private javax.swing.JTable tblCategories;
     private javax.swing.JTable tblDrinks;
     // End of variables declaration//GEN-END:variables
+
+    List<Drinks> drinks = List.of();
+    List<Categories> categories = List.of();
+    DrinkDAO drinkDao = new DrinkDAOImpl();
+    CategoryDAO categoryDao = new CategoryDAOImpl();
+
+    @Override
+    public void open() {
+        this.setLocationRelativeTo(null);
+        this.fillCategories();
+        this.fillDrinks();
+    }
+
+    @Override
+    public void fillCategories() {
+        categories = categoryDao.findAll();
+        DefaultTableModel model = (DefaultTableModel) tblCategories.getModel();
+        model.setRowCount(0);
+        categories.forEach(d -> model.addRow(new Object[] {d.getName()}));
+        tblCategories.setRowSelectionInterval(0, 0);
+    }
+
+    @Override
+    public void fillDrinks() {
+        Categories category = categories.get(tblCategories.getSelectedRow());
+        drinks = drinkDao.findByCategoryId(category.getId());
+        DefaultTableModel model = (DefaultTableModel) tblDrinks.getModel();
+        model.setRowCount(0);
+        drinks.forEach(d -> {
+            Object[] row = {
+                    d.getId(),
+                    d.getName(),
+                    String.format("$%.1f", d.getUnitPrice()),
+                    String.format("%.0f%%", d.getDiscount()*100)
+            };
+            model.addRow(row);
+        });
+    }
+
+    @Override
+    public void addDrinkToBill() {
+        String quantity = XDialog.prompt("Số lượng?");
+        if(quantity != null && quantity.length() > 0){
+            Drinks drink = drinks.get(tblDrinks.getSelectedRow());
+            BillDetails detail = new BillDetails();
+            detail.setBillId(bill.getId());
+            detail.setDiscount(drink.getDiscount());
+            detail.setDrinkId(drink.getId());
+            detail.setQuantity(Integer.parseInt(quantity));
+            detail.setUnitPrice(drink.getUnitPrice());
+            new BillDetailDAOImpl().create(detail);
+        }
+    }
 }
