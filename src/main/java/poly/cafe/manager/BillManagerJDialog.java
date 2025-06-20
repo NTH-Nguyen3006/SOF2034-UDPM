@@ -580,11 +580,12 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     @Override
     public Bills getForm() {
         return Bills.builder()
+            .id(Long.parseLong(txtId.getText()))
             .username(txtCreator.getText())
             .cardId(Integer.parseInt(txtCardId.getText()))
             .status(rdoServicing.isSelected()? 0 : 1)
-            .checkin(XDate.parse(txtCreateTime.getText()))
-            .checkout(XDate.parse(txtPayTime.getText()))
+            .checkin(XDate.parse(txtCreateTime.getText(), XDate.PATTERN_FULL))
+            .checkout(XDate.parse(txtPayTime.getText(), XDate.PATTERN_FULL))
             .build();
     }
 
@@ -592,8 +593,8 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
     public void fillToTable() {
         DefaultTableModel model = (DefaultTableModel) tblBills.getModel();
         model.setRowCount(0);
-        Date begin = XDate.parse(txtBegin.getText(), "MM/dd/yyyyy");
-        Date end = XDate.parse(txtEnd.getText(), "MM/dd/yyyyy");
+        Date begin = XDate.parse(txtBegin.getText(), "MM/dd/yyyy");
+        Date end = XDate.parse(txtEnd.getText(), "MM/dd/yyyy");
         items = dao.findByTimeRange(begin, end);
 
         items.forEach(item -> {
@@ -623,19 +624,25 @@ public class BillManagerJDialog extends javax.swing.JDialog implements BillContr
 
     @Override
     public void update() {
+        System.out.println(this.getForm().toString());
         dao.update(this.getForm());
+        this.fillToTable();
     }
 
     @Override
     public void delete() {
         dao.deleteById(Long.parseLong(txtId.getText()));
-
+        this.fillToTable();
+        tabsFormBills.setSelectedIndex(0);
     }
 
     @Override
     public void clear() {
         XOther.setEmptyField(txtCreateTime, txtCreator, txtCardId, txtId, txtPayTime);
         rdoServicing.setSelected(true);
+        txtId.setEnabled(true);
+        this.setEditable(false);
+        ((DefaultTableModel) tblBillDetails.getModel()).setRowCount(0);
     }
 
     @Override

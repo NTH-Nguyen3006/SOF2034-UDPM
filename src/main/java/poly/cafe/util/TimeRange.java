@@ -5,21 +5,17 @@ import java.util.Date;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
-@Data
 @AllArgsConstructor
+@Data
 public class TimeRange {
-    private Date begin;
-    private Date end;
 
-    private TimeRange(LocalDate beginlocaldate, LocalDate endlocaldate) {
-        this(java.sql.Date.valueOf(beginlocaldate), java.sql.Date.valueOf(endlocaldate));
+    private Date begin = new Date();
+    private Date end = new Date();
+    
+    private TimeRange(LocalDate begin, LocalDate end) {
+        this(java.sql.Date.valueOf(begin), java.sql.Date.valueOf(end));
     }
-
-//    private TimeRange(LocalDate beginlocaldate, LocalDate endlocaldate) {
-//        this.begin = java.sql.Date.valueOf(beginlocaldate);
-//        this.end = java.sql.Date.valueOf(endlocaldate);
-//    }
-
+    
     public static TimeRange today() {
         LocalDate begin = LocalDate.now();
         return new TimeRange(begin, begin.plusDays(1));

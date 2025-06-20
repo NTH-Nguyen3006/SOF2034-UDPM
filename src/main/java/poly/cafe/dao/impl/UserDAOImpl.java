@@ -1,57 +1,59 @@
 package poly.cafe.dao.impl;
 
-import poly.cafe.dao.impl.interfaces.UserDAO;
-import poly.cafe.entity.Users;
+import java.util.List;
+import poly.cafe.dao.UserDAO;
+import poly.cafe.entity.User;
 import poly.cafe.util.XJdbc;
 import poly.cafe.util.XQuery;
 
-import java.util.List;
-
 public class UserDAOImpl implements UserDAO {
-    String createSql = """
-            INSERT INTO Users (Username, [Password], [Enabled], Fullname, Photo, Manager)
-            VALUES (?, ?, ?, ?, ?, ?)""";
 
-    String updateSql = """
-            UPDATE Users SET [Password] = ?, [Enabled] = ?,
-            Fullname = ?, Photo = ?, Manager = ? 
-            WHERE Username = ?
-            """;
-    String deleteSql = """
-            DELETE FROM Users WHERE Username = ?
-            """;
-    String findAllSql = "SELECT * FROM Users;";
-    String findByIdSql = "SELECT * FROM Users WHERE Username = ?";
+    private final String createSql = "INSERT INTO SOF2042_Users(Username, Password, Enabled, Fullname, Photo, Manager) VALUES(?, ?, ?, ?, ?, ?)";
+    private final String updateSql = "UPDATE SOF2042_Users SET Password=?, Enabled=?, Fullname=?, Photo=?, Manager=? WHERE Username=?";
+    private final String deleteByIdSql = "DELETE FROM SOF2042_Users WHERE Username=?";
+    
+    private final String findAllSql = "SELECT * FROM SOF2042_Users";
+    private final String findByIdSql = "SELECT * FROM SOF2042_Users WHERE Username=?";
 
     @Override
-    public Users create(Users entity) {
-        XJdbc.executeUpdate(createSql, entity.getUsername(),
-                entity.getPassword(), entity.isEnabled(), entity.getFullname(),
-                entity.getPhoto(), entity.isManager());
-
-        return XQuery.getSingleBean(Users.class, findByIdSql, entity.getUsername());
+    public User create(User entity) {
+        Object[] values = {
+            entity.getUsername(),
+            entity.getPassword(),
+            entity.isEnabled(),
+            entity.getFullname(),
+            entity.getPhoto(),
+            entity.isManager()
+        };
+        XJdbc.executeUpdate(createSql, values);
+        return entity;
     }
 
     @Override
-    public void update(Users entity) {
-        XJdbc.executeUpdate(updateSql,
-                entity.getPassword(), entity.isEnabled(), entity.getFullname(),
-                entity.getPhoto(), entity.isManager(), entity.getUsername());
-        System.out.println("Update Users");
+    public void update(User entity) {
+        Object[] values = {
+            entity.getPassword(),
+            entity.isEnabled(),
+            entity.getFullname(),
+            entity.getPhoto(),
+            entity.isManager(),
+            entity.getUsername()
+        };
+        XJdbc.executeUpdate(updateSql, values);
     }
 
     @Override
-    public void deleteById(String s) {
-        XJdbc.executeUpdate(deleteSql, s);
+    public void deleteById(String id) {
+        XJdbc.executeUpdate(deleteByIdSql, id);
     }
 
     @Override
-    public List<Users> findAll() {
-        return XQuery.getEntityList(Users.class, findAllSql);
+    public List<User> findAll() {
+        return XQuery.getBeanList(User.class, findAllSql);
     }
 
     @Override
-    public Users findById(String s) {
-        return XQuery.getSingleBean(Users.class, findByIdSql, s.trim());
+    public User findById(String id) {
+        return XQuery.getSingleBean(User.class, findByIdSql, id);
     }
 }

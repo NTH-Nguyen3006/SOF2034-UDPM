@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import poly.cafe.entity.Users;
+import poly.cafe.entity.User;
 
 /**
  * Lớp tiện ích hỗ trợ truy vấn và chuyển đổi sang đối tượng
@@ -34,14 +34,9 @@ public class XQuery {
         return null;
     }
 
-    public static <B> List<B> getEntityList(Class<B> beanClass, String sql, Object... values) {
-        List<B> list = XQuery.getBeanList(beanClass, sql, values);
-        return list.isEmpty()? null : list;
-    }
-
     /**
      * Truy vấn nhiều đối tượng
-     *  
+     *
      * @param <B> kiểu của đối tượng cần chuyển đổi
      * @param beanClass lớp của đối tượng kết quả
      * @param sql câu lệnh truy vấn
@@ -95,12 +90,11 @@ public class XQuery {
 
     private static void demo1() {
         String sql = "SELECT * FROM Users WHERE Username=? AND Password=?";
-        Users user = XQuery.getSingleBean(Users.class, sql, "admin", "admin");
+        User user = XQuery.getSingleBean(User.class, sql, "NghiemN", "123456");
     }
 
     private static void demo2() {
         String sql = "SELECT * FROM Users WHERE Fullname LIKE ?";
-        List<Users> list = XQuery.getBeanList(Users.class, sql, "%Nguyễn %");
-        list.forEach(System.out::println);
+        List<User> list = XQuery.getBeanList(User.class, sql, "%Nguyễn %");
     }
 }

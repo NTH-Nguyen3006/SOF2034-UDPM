@@ -1,46 +1,51 @@
 package poly.cafe.dao.impl;
 
-import poly.cafe.dao.impl.interfaces.CategoryDAO;
-import poly.cafe.entity.Categories;
+import java.util.List;
+import poly.cafe.dao.CategoryDAO;
+import poly.cafe.entity.Category;
 import poly.cafe.util.XJdbc;
 import poly.cafe.util.XQuery;
 
-import java.util.List;
-
 public class CategoryDAOImpl implements CategoryDAO {
-    String createSql = "INSERT INTO Categories(Id, Name) VALUES(?, ?)";
-    String updateSql = "UPDATE Categories SET Name=? WHERE Id=?";
-    String deleteSql = "DELETE FROM Categories WHERE Id=?";
-    String findAllSql = "SELECT * FROM Categories";
-    String findByIdSql = "SELECT * FROM Categories WHERE Id=?";
+
+    private final String createSql = "INSERT INTO SOF2042_Categories(Id, Name) VALUES(?, ?)";
+    private final String updateSql = "UPDATE SOF2042_Categories SET Name=? WHERE Id=?";
+    private final String deleteByIdSql = "DELETE FROM SOF2042_Categories WHERE Id=?";
+    
+    private final String findAllSql = "SELECT * FROM SOF2042_Categories";
+    private final String findByIdSql = findAllSql + " WHERE Id=?";
 
     @Override
-    public Categories create(Categories entity) {
+    public Category create(Category entity) {
         Object[] values = {
-                entity.getId(),
-                entity.getName()
+            entity.getId(),
+            entity.getName()
         };
         XJdbc.executeUpdate(createSql, values);
         return entity;
     }
+
     @Override
-    public void update(Categories entity) {
+    public void update(Category entity) {
         Object[] values = {
-                entity.getName(),
-                entity.getId()
+            entity.getName(),
+            entity.getId()
         };
         XJdbc.executeUpdate(updateSql, values);
     }
+
     @Override
     public void deleteById(String id) {
-        XJdbc.executeUpdate(deleteSql, id);
+        XJdbc.executeUpdate(deleteByIdSql, id);
     }
+
     @Override
-    public List<Categories> findAll() {
-        return XQuery.getEntityList(Categories.class, findAllSql);
+    public List<Category> findAll() {
+        return XQuery.getBeanList(Category.class, findAllSql);
     }
+
     @Override
-    public Categories findById(String id) {
-        return XQuery.getSingleBean(Categories.class, findByIdSql, id);
+    public Category findById(String id) {
+        return XQuery.getSingleBean(Category.class, findByIdSql, id);
     }
 }

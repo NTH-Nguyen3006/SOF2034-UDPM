@@ -408,16 +408,19 @@ public class DrinkManagerJDialog extends javax.swing.JDialog implements DrinkCon
 
     private void deleteBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteBtnActionPerformed
         this.delete();
+        this.fillToTable();
         tabs.setSelectedIndex(0);
     }//GEN-LAST:event_deleteBtnActionPerformed
 
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
         this.update();
+        this.fillToTable();
         tabs.setSelectedIndex(0);
     }//GEN-LAST:event_updateBtnActionPerformed
 
     private void createBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_createBtnActionPerformed
         this.create();
+        this.fillToTable();
         tabs.setSelectedIndex(0);
     }//GEN-LAST:event_createBtnActionPerformed
 

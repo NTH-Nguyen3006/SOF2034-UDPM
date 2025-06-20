@@ -4,27 +4,27 @@
  */
 package poly.cafe.ui;
 
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
 import java.awt.event.ActionEvent;
 import java.util.List;
+import javax.swing.JButton;
+import poly.cafe.dao.BillDAO;
+import poly.cafe.dao.CardDAO;
 import poly.cafe.dao.impl.BillDAOImpl;
 import poly.cafe.dao.impl.CardDAOImpl;
-import poly.cafe.dao.impl.interfaces.BillDAO;
-import poly.cafe.dao.impl.interfaces.CardDAO;
-import poly.cafe.entity.Bills;
-import poly.cafe.entity.Cards;
-import poly.cafe.manager.Controller.SalesController;
-
-import javax.swing.*;
+import poly.cafe.entity.Bill;
+import poly.cafe.entity.Card;
 
 /**
  *
- * @author Admin
+ * @author DELL
  */
 public class SalesJDialog extends javax.swing.JDialog implements SalesController {
 
     /**
-     * Creates new form SalesJDialog
+     * Creates new form CardJDialog
      */
     public SalesJDialog(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
@@ -40,37 +40,44 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        pnlCards = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        pnlCard = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Thẻ Định Danh");
+        setTitle("Thẻ định danh");
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowOpened(java.awt.event.WindowEvent evt) {
                 formWindowOpened(evt);
             }
         });
 
-        pnlCards.setLayout(new java.awt.GridLayout(0, 6, 5, 5));
+        jScrollPane1.setBorder(null);
+
+        pnlCard.setLayout(new java.awt.GridLayout(0, 6, 5, 5));
+        jScrollPane1.setViewportView(pnlCard);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(pnlCards, javax.swing.GroupLayout.PREFERRED_SIZE, 739, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 701, Short.MAX_VALUE)
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(pnlCards, javax.swing.GroupLayout.PREFERRED_SIZE, 443, javax.swing.GroupLayout.PREFERRED_SIZE))
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 323, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
+        // TODO add your handling code here:
         this.open();
     }//GEN-LAST:event_formWindowOpened
 
@@ -100,6 +107,9 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
             java.util.logging.Logger.getLogger(SalesJDialog.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
+        //</editor-fold>
 
         /* Create and display the dialog */
         java.awt.EventQueue.invokeLater(new Runnable() {
@@ -116,6 +126,11 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
         });
     }
 
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JPanel pnlCard;
+    // End of variables declaration//GEN-END:variables
+
     @Override
     public void open() {
         this.setLocationRelativeTo(null);
@@ -125,36 +140,35 @@ public class SalesJDialog extends javax.swing.JDialog implements SalesController
     @Override
     public void showBillJDialog(int cardId) {
         BillDAO dao = new BillDAOImpl();
-        Bills bill = dao.findServicingByCardId(cardId); // tải bill đang phục vụ của thẻ
+        Bill bill = dao.findServicingByCardId(cardId);
+
         BillJDialog dialog = new BillJDialog((Frame) this.getOwner(), true);
         dialog.setBill(bill);
         dialog.setVisible(true);
     }
 
-    private void loadCards() {// tải và hiển thị các thẻ lên cửa sổ bán hàng
+    private void loadCards() {
         CardDAO dao = new CardDAOImpl();
-        List<Cards> cards = dao.findAll();
-        pnlCards.removeAll();
-        cards.forEach(card -> pnlCards.add(this.createButton(card)));
-        this.pack();
+        List<Card> cards = dao.findAll();
+
+        pnlCard.removeAll();
+        cards.forEach(card -> {
+            pnlCard.add(this.createButton(card));
+        });
     }
 
-    private JButton createButton(Cards card) { // tạo Jbutton cho thẻ
+    private JButton createButton(Card card) {
         JButton btnCard = new JButton();
         btnCard.setText(String.format("Card #%d", card.getId()));
         btnCard.setPreferredSize(new Dimension(0, 80));
         btnCard.setEnabled(card.getStatus() == 1);
         btnCard.setBackground(btnCard.isEnabled() ? Color.GREEN : Color.GRAY);
         btnCard.setActionCommand(String.valueOf(card.getId()));
+
         btnCard.addActionListener((ActionEvent e) -> {
             int cardId = Integer.parseInt(e.getActionCommand());
             SalesJDialog.this.showBillJDialog(cardId);
         });
         return btnCard;
     }
-
-
-    // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel pnlCards;
-    // End of variables declaration//GEN-END:variables
 }

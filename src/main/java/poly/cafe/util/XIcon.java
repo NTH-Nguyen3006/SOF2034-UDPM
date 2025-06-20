@@ -14,7 +14,6 @@ public class XIcon {
      * @param path đường dẫn file, đường dẫn resource hoặc tên resource
      * @return ImageIcon
      */
-
     public static ImageIcon getIcon(String path) {
         if(!path.contains("/") && !path.contains("\\")){ // resource name
             return XIcon.getIcon("/poly/cafe/icons/" + path);
@@ -22,7 +21,6 @@ public class XIcon {
         if(path.startsWith("/")){ // resource path
             return new ImageIcon(XIcon.class.getResource(path));
         }
-        System.out.println(new ImageIcon(path));
         return new ImageIcon(path);
     }
     /**

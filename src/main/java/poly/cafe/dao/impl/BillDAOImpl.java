@@ -1,103 +1,99 @@
 package poly.cafe.dao.impl;
 
-import poly.cafe.dao.impl.interfaces.BillDAO;
-import poly.cafe.entity.Bills;
-import poly.cafe.util.XAuth;
-import poly.cafe.util.XJdbc;
-import poly.cafe.util.XQuery;
-
 import java.util.Date;
 import java.util.List;
+import poly.cafe.entity.Bill;
+import poly.cafe.util.XJdbc;
+import poly.cafe.dao.BillDAO;
+import poly.cafe.util.XAuth;
+import poly.cafe.util.XQuery;
 
 public class BillDAOImpl implements BillDAO {
-    String findByTimeRangeSql = """
-            SELECT * FROM Bills
-            WHERE Checkin BETWEEN ? AND ? ORDER BY Checkin DESC
-            """;
-    String findByIdSql = "SELECT * FROM Bills WHERE ID = ?";
-    String deleteByIdSql = "DELETE FROM Bills WHERE ID = ?";
-    String findByUsernameSql = "SELECT * FROM Bills WHERE Username = ?";
-    String findByCardIdSql = "SELECT * FROM Bills WHERE CardId = ?";
-    String createSql = """
-            INSERT INTO Bills (Username, CardId, Checkin, Checkout, [Status])
-            VALUES (?, ?, ?, ?, ?) """;
 
-    String updateSql = """
-            UPDATE Bills SET
-                Username = ?, CardId = ?,
-                Checkin = ?, Checkout = ?, [Status] = ?
-            WHERE ID = ?;
-            """;
+    private final String createSql = "INSERT INTO SOF2042_Bills(Username, CardId, Checkin, Status) VALUES(?, ?, ?, ?)";
+    private final String updateSql = "UPDATE SOF2042_Bills SET Username=?, CardId=?, Checkin=?, Checkout=?, Status=? WHERE Id=?";
+    private final String deleteByIdSql = "DELETE FROM SOF2042_Bills WHERE Id=?";
 
-    String findAllSql = "SELECT * FROM BILLS";
-
+    private final String findAllSql = "SELECT * FROM SOF2042_Bills";
+    private final String findByIdSql = findAllSql + " WHERE Id=?";
+    private final String findLastSql = findAllSql + " WHERE Id IN(SELECT max(Id) FROM SOF2042_Bills)";
+    private final String findByUsernameSql = findAllSql + " WHERE Username=?";
+    private final String findByCardIdSql = findAllSql + " WHERE CardId=?";
+    private final String findServicingByCardIdSql = findAllSql + " WHERE CardId=? AND Status=0";
+    private final String findByUsernameAndTimeRangeSql = findAllSql + " WHERE Username=? AND Checkin BETWEEN ? AND ? ORDER BY Checkin DESC";
+    private final String findByTimeRangeSql = findAllSql + " WHERE Checkin BETWEEN ? AND ? ORDER BY Checkin DESC";
 
     @Override
-    public List<Bills> findByUsername(String username) {
-        return XQuery.getBeanList(Bills.class, findByUsernameSql, username);
+    public Bill create(Bill entity) {
+        Object[] values = {
+            entity.getUsername(),
+            entity.getCardId(),
+            entity.getCheckin(),
+            entity.getStatus()
+        };
+        XJdbc.executeUpdate(createSql, values);
+        return XQuery.getSingleBean(Bill.class, findLastSql);
     }
 
     @Override
-    public List<Bills> findByCardId(Integer cardId) {
-        return XQuery.getBeanList(Bills.class, findByCardIdSql, cardId);
+    public void update(Bill entity) {
+        Object[] values = {
+            entity.getUsername(),
+            entity.getCardId(),
+            entity.getCheckin(),
+            entity.getCheckout(),
+            entity.getStatus(),
+            entity.getId()
+        };
+        XJdbc.executeUpdate(updateSql, values);
     }
 
     @Override
-    public Bills create(Bills entity) {
-        int rowAffect = XJdbc.executeUpdate(createSql, entity.getUsername(), entity.getCardId(),
-                entity.getCheckin(), entity.getCheckout(),
-                entity.getStatus());
-        return (rowAffect != 0)? entity : null;
+    public void deleteById(Long id) {
+        XJdbc.executeUpdate(deleteByIdSql, id);
     }
 
     @Override
-    public void update(Bills entity) {
-        XJdbc.executeUpdate(updateSql,
-                entity.getUsername(), entity.getCardId(),
-                entity.getCheckin(), entity.getCheckout(),
-                entity.getStatus(), entity.getId());
+    public List<Bill> findAll() {
+        return XQuery.getBeanList(Bill.class, findAllSql);
     }
 
     @Override
-    public void deleteById(Long aLong) {
-        XJdbc.executeUpdate(deleteByIdSql, aLong);
+    public Bill findById(Long id) {
+        return XQuery.getSingleBean(Bill.class, findByIdSql, id);
+    }
+    
+    @Override
+    public List<Bill> findByUsername(String username) {
+        return XQuery.getBeanList(Bill.class, findByUsernameSql, username);
     }
 
     @Override
-    public List<Bills> findAll() {
-        return XQuery.getBeanList(Bills.class, findAllSql);
+    public List<Bill> findByCardId(Integer cardId) {
+        return XQuery.getBeanList(Bill.class, findByCardIdSql, cardId);
     }
 
     @Override
-    public Bills findById(Long aLong) {
-        return XQuery.getSingleBean(Bills.class, findByIdSql, aLong);
-    }
-
-    @Override
-    public List<Bills> findByTimeRange (Date begin, Date end) {
-        return XQuery.getBeanList(Bills.class, findByTimeRangeSql, begin, end);
-    }
-
-    @Override
-    public Bills findServicingByCardId(Integer cardId) {
-        String sql = "SELECT * FROM Bills WHERE CardId=? AND Status=0";
-        Bills bill = XQuery.getSingleBean(Bills.class, sql, cardId);
-        if (bill == null) { // không tìm thấy -> tạo mới
-            Bills newBill = new Bills();
+    public Bill findServicingByCardId(Integer cardId) {
+        Bill bill = XQuery.getSingleBean(Bill.class, findServicingByCardIdSql, cardId);
+        if (bill == null) {
+            Bill newBill = new Bill();
             newBill.setCardId(cardId);
             newBill.setCheckin(new Date());
-            newBill.setStatus(0); // đang phục vụ
+            newBill.setStatus(0);
             newBill.setUsername(XAuth.user.getUsername());
-            bill = this.create(newBill); // insert
+            bill = this.create(newBill);
         }
         return bill;
     }
 
     @Override
-    public List<Bills> findByUserAndTimeRange(String username, Date begin, Date end) {
-        String sql = """
-                SELECT * FROM Bills WHERE Username=? AND Checkin BETWEEN ? AND ?
-                """;
-        return XQuery.getBeanList(Bills.class, sql, username, begin, end);
+    public List<Bill> findByUserAndTimeRange(String username, Date begin, Date end) {
+        return XQuery.getBeanList(Bill.class, findByUsernameAndTimeRangeSql, username, begin, end);
+    }
+
+    @Override
+    public List<Bill> findByTimeRange(Date begin, Date end) {
+        return XQuery.getBeanList(Bill.class, findByTimeRangeSql, begin, end);
     }
 }

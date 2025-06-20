@@ -1,60 +1,71 @@
 package poly.cafe.dao.impl;
 
-import poly.cafe.dao.impl.interfaces.DrinkDAO;
-import poly.cafe.entity.Drinks;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+import poly.cafe.entity.Drink;
 import poly.cafe.util.XJdbc;
+import poly.cafe.util.XStr;
+import poly.cafe.dao.DrinkDAO;
 import poly.cafe.util.XQuery;
 
-import java.util.List;
-
 public class DrinkDAOImpl implements DrinkDAO {
-    String findAllSQL = "SELECT * FROM Drinks";
-    String findByCategoryIdSQL = "SELECT * FROM Drinks WHERE CategoryId = ?;";
-    String createSQL = """
-            INSERT INTO Drinks (Id, Name, UnitPrice, Discount, Image, Available, CategoryId)
-            VALUES (?,?,?,?,?,?,?);""";
-    String updateSQL = """
-            UPDATE Drinks SET Name = ?, UnitPrice = ?, Discount = ?,
-            Image = ?, Available = ? WHERE Id = ?;""";
-    String deleteByIdSQL = "DELETE FROM Drinks WHERE Id = ?;";
-    String findByIdSQL = "SELECT * FROM Drinks WHERE Id = = ?;";
 
+    private final String createSql = "INSERT INTO SOF2042_Drinks(Id, Name, Image, UnitPrice, Discount, Available, CategoryId) VALUES(?, ?, ?, ?, ?, ?, ?)";
+    private final String updateSql = "UPDATE SOF2042_Drinks SET Name=?, Image=?, UnitPrice=?, Discount=?, Available=?, CategoryId=? WHERE Id=?";
+    private final String deleteByIdSql = "DELETE FROM SOF2042_Drinks WHERE Id=?";
+    
+    private final String findAllSql = "SELECT * FROM SOF2042_Drinks";
+    private final String findByIdSql = findAllSql + " WHERE Id=?";
+    private final String findByCategoryIdSql = findAllSql + " WHERE CategoryId=?";
 
     @Override
-    public List<Drinks> findByCategoryId(String categoryId) {
-        return XQuery.getBeanList(Drinks.class, findByCategoryIdSQL, categoryId);
+    public Drink create(Drink entity) {
+        entity.setId(XStr.getKey());
+        Object[] values = {
+            entity.getId(),
+            entity.getName(),
+            entity.getImage(),
+            entity.getUnitPrice(),
+            entity.getDiscount(),
+            entity.isAvailable(),
+            entity.getCategoryId()
+        };
+        XJdbc.executeUpdate(createSql, values);
+        return entity;
     }
 
     @Override
-    public Drinks create(Drinks entity) {
-        //Id, Name, UnitPrice, Discount, Image, Available, CategoryId
-        int rowAffect = XJdbc.executeUpdate(createSQL, entity.getId(),
-                entity.getName(), entity.getUnitPrice(), entity.getDiscount(),
-                entity.getImage(), entity.isAvailable(), entity.getCategoryId());
-
-        if (rowAffect > 0) return this.findById(entity.getId());
-        else return null;
+    public void update(Drink entity) {
+        Object[] values = {
+            entity.getName(),
+            entity.getImage(),
+            entity.getUnitPrice(),
+            entity.getDiscount(),
+            entity.isAvailable(),
+            entity.getCategoryId(),
+            entity.getId()
+        };
+        XJdbc.executeUpdate(updateSql, values);
     }
 
     @Override
-    public void update(Drinks entity) {
-        XJdbc.executeUpdate(updateSQL,
-            entity.getName(), entity.getUnitPrice(), entity.getDiscount(),
-            entity.getImage(), entity.isAvailable(), entity.getId());
+    public void deleteById(String id) {
+        XJdbc.executeUpdate(deleteByIdSql, id);
     }
 
     @Override
-    public void deleteById(String s) {
-        XJdbc.executeUpdate(deleteByIdSQL, s);
+    public List<Drink> findAll() {
+        return XQuery.getBeanList(Drink.class, findAllSql);
     }
 
     @Override
-    public List<Drinks> findAll() {
-        return XQuery.getBeanList(Drinks.class, findAllSQL);
+    public Drink findById(String id) {
+        return XQuery.getSingleBean(Drink.class, findByIdSql, id);
     }
 
     @Override
-    public Drinks findById(String s) {
-        return XQuery.getSingleBean(Drinks.class, findByIdSQL, s);
-    }
+    public List<Drink> findByCategoryId(String categoryId) {
+        return XQuery.getBeanList(Drink.class, findByCategoryIdSql, categoryId);
+    }    
 }

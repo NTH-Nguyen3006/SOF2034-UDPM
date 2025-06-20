@@ -1,39 +1,51 @@
 package poly.cafe.dao.impl;
 
-import poly.cafe.dao.impl.interfaces.CardDAO;
-import poly.cafe.entity.Cards;
+import java.util.List;
+import poly.cafe.dao.CardDAO;
+import poly.cafe.entity.Card;
+import poly.cafe.util.XJdbc;
 import poly.cafe.util.XQuery;
 
-import java.util.List;
-
-
 public class CardDAOImpl implements CardDAO {
-    String findAllSql = """
-            SELECT * FROM [PolyCafe].[dbo].[Cards]
-            """;
+
+    private final String createSql = "INSERT INTO SOF2042_Cards(Id, Status) VALUES(?, ?)";
+    private final String updateSql = "UPDATE SOF2042_Cards SET Status=? WHERE Id=?";
+    private final String deleteByIdSql = "DELETE FROM SOF2042_Cards WHERE Id=?";
+    
+    private final String findAllSql = "SELECT * FROM SOF2042_Cards";
+    private final String findByIdSql = findAllSql + " WHERE Id=?";
 
     @Override
-    public Cards create(Cards entity) {
-        return null;
+    public Card create(Card entity) {
+        Object[] values = {
+            entity.getId(),
+            entity.getStatus()
+        };
+        XJdbc.executeUpdate(createSql, values);
+        return entity;
     }
 
     @Override
-    public void update(Cards entity) {
-
+    public void update(Card entity) {
+        Object[] values = {
+            entity.getStatus(),
+            entity.getId()
+        };
+        XJdbc.executeUpdate(updateSql, values);
     }
 
     @Override
-    public void deleteById(Integer integer) {
-
+    public void deleteById(Integer id) {
+        XJdbc.executeUpdate(deleteByIdSql, id);
     }
 
     @Override
-    public List<Cards> findAll() {
-        return XQuery.getBeanList(Cards.class, findAllSql);
+    public List<Card> findAll() {
+        return XQuery.getBeanList(Card.class, findAllSql);
     }
 
     @Override
-    public Cards findById(Integer integer) {
-        return null;
+    public Card findById(Integer id) {
+        return XQuery.getSingleBean(Card.class,findByIdSql, id);
     }
 }

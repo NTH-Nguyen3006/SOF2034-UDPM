@@ -25,7 +25,7 @@ public class XJdbc {
         var driver = "com.microsoft.sqlserver.jdbc.SQLServerDriver";
         var dburl = "jdbc:sqlserver://localhost:1433;database=PolyCafe;encrypt=true;trustServerCertificate=true;";
         var username = "sa";
-        var password = "123";
+        var password = "YOUR PASSWORD";
         try {
             if (!XJdbc.isReady()) {
                 Class.forName(driver);
@@ -52,6 +52,7 @@ public class XJdbc {
 
     /**
      * Kiểm tra kết nối đã sẵn sàng hay chưa
+     * 
      * @return true nếu kết nối đã được mở
      */
     public static boolean isReady() {
@@ -65,12 +66,13 @@ public class XJdbc {
     /**
      * Thao tác dữ liệu
      *
-     * @param sql câu lệnh SQL (INSERT, UPDATE, DELETE)
+     * @param sql    câu lệnh SQL (INSERT, UPDATE, DELETE)
      * @param values các giá trị cung cấp cho các tham số trong SQL
      * @return số lượng bản ghi đã thực hiện
      * @throws RuntimeException không thực thi được câu lệnh SQL
      */
     public static int executeUpdate(String sql, Object... values) {
+        sql = sql.replace("SOF2042_", "");
         try {
             var stmt = XJdbc.getStmt(sql, values);
             return stmt.executeUpdate();
@@ -82,12 +84,13 @@ public class XJdbc {
     /**
      * Truy vấn dữ liệu
      *
-     * @param sql câu lệnh SQL (SELECT)
+     * @param sql    câu lệnh SQL (SELECT)
      * @param values các giá trị cung cấp cho các tham số trong SQL
      * @return tập kết quả truy vấn
      * @throws RuntimeException không thực thi được câu lệnh SQL
      */
     public static ResultSet executeQuery(String sql, Object... values) {
+        sql = sql.replace("SOF2042_", "");
         try {
             var stmt = XJdbc.getStmt(sql, values);
             return stmt.executeQuery();
@@ -99,8 +102,8 @@ public class XJdbc {
     /**
      * Truy vấn một giá trị
      *
-     * @param <T> kiểu dữ liệu kết quả
-     * @param sql câu lệnh SQL (SELECT)
+     * @param <T>    kiểu dữ liệu kết quả
+     * @param sql    câu lệnh SQL (SELECT)
      * @param values các giá trị cung cấp cho các tham số trong SQL
      * @return giá trị truy vấn hoặc null
      * @throws RuntimeException không thực thi được câu lệnh SQL
@@ -120,7 +123,7 @@ public class XJdbc {
     /**
      * Tạo PreparedStatement từ câu lệnh SQL/PROC
      *
-     * @param sql câu lệnh SQL/PROC
+     * @param sql    câu lệnh SQL/PROC
      * @param values các giá trị cung cấp cho các tham số trong SQL/PROC
      * @return đối tượng đã tạo
      * @throws SQLException không tạo được PreparedStatement
